@@ -1,0 +1,14 @@
+<nav id="sidebar-icon-links">
+  {% for link in site.links %}
+    <a class="icon" title="{{ link.name }}"
+       href="{{ link.url }}">
+      {% include utils/icon.html icon_class=link.icon_class %}
+    </a>
+  {% endfor %}
+
+  <a id="subscribe-link"
+     class="icon" title="Subscribe" aria-label="Subscribe"
+     href="{{ site.baseurl }}/feed.xml">
+    {% include utils/icon.html icon_class="fas fa-rss" %}
+  </a>
+</nav>

@@ -1,0 +1,28 @@
+---
+layout: list
+
+---
+
+<div class="content">
+  {% include utils/pagination-newer.html %}
+
+  {{ content }}
+
+  {% for post in paginator.posts %}
+  <article class="post-body teaser">
+    {% include posts/post-meta.html post=post %}
+    <h2 class="post-title">
+      <a href="{{ site.baseurl }}{{ post.url }}">
+        {{ post.title }}
+      </a>
+    </h2>
+
+    {% if post.description %}
+      <p class='description'>{{ post.description }}</p>
+    {% endif %}
+
+  </article>
+  {% endfor %}
+
+  {% include utils/pagination-older.html %}
+</div>

@@ -1,0 +1,50 @@
+# Dependencies
+markdown:         kramdown
+highlighter:      rouge
+
+# Setup
+title:            David Seddon
+
+author:
+  name:           'David Seddon'
+
+email:  david@seddonym.me
+
+paginate:         3
+paginate_path:    '/blog/page:num'
+
+image_path: '/assets/img/'
+collections:
+  talks:
+    output: true
+
+plugins:
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-paginate
+
+# Custom vars
+sidebar_home_link:  true
+sidebar_blog_link:  '/blog'   # By default, your home page is your blog
+                              # page. If you change your paginate_path,
+                              # set this to the root of the paginate_path
+                              # to enable a separate blog link.
+github:
+  repo:             https://github.com/seddonym
+
+links:
+  - name: Github
+    url: https://www.github.com/seddonym
+    icon_class: "fab fa-github"
+
+  - name: Stack Overflow
+    url: https://stackoverflow.com/story/seddonym
+    icon_class: "fab fa-stack-overflow"
+
+  - name: Twitter
+    url: https://twitter.com/seddonym
+    icon_class: "fab fa-twitter"
+
+  - name: LinkedIn
+    url: https://www.linkedin.com/in/seddonym
+    icon_class: "fab fa-linkedin"

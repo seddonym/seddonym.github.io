@@ -1,0 +1,16 @@
+<section class="related">
+  <h3>Featured talks</h3>
+
+  <ul class="posts-list">
+    {% for talk in site.talks limit:3 %}
+      <li>
+        <h4>
+          <a href="{{ site.baseurl }}{{ talk.url }}">
+            {{ talk.title }}
+            <small>{{ talk.date | date_to_string }}</small>
+          </a>
+        </h4>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

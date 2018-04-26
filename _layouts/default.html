@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+
+  {% include head/head.html %}
+
+  <body class="{{ page.layout }}{% if page.url == '/' %} home{% endif %}">
+
+    {% include sidebar/sidebar.html %}
+
+    <main class="container">
+      {{ content }}
+    </main>
+
+  </body>
+</html>

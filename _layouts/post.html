@@ -1,0 +1,16 @@
+---
+layout: detail
+---
+
+{% include posts/post-meta.html post=page %}
+
+  {% if page.description %}
+    <p class='description'>{{ page.description }}</p>
+  {% endif %}
+
+  <hr>
+<div class="post-body">
+  {{ content }}
+</div>
+
+<!--{% include comments/comments.html %}-->

@@ -1,0 +1,26 @@
+---
+layout: detail
+---
+
+<img src='{{ site.image_path }}talks/{{ page.image }}' alt='{{ page.title }}'/>
+{% include talks/talk-meta.html talk=page %}
+
+  {% if page.description %}
+    <p class='description'>{{ page.description }}</p>
+  {% endif %}
+
+  <hr>
+<div class="post-body">
+  {{ content }}
+  {% if page.skills_matter_link %}
+    <p>This talk was filmed at the London Django Meetup. You can watch the video on the Skills Matter
+    website <a href="{{ page.skills_matter_link }}">here</a>.</p>
+  {% endif %}
+  {% if page.youtube_embed_url %}
+    <div class='iframe-wrapper'>
+      <iframe width="560" height="315" src="{{ page.youtube_embed_url }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  {% endif %}
+</div>
+
+  <!--{% include comments/comments.html %}-->

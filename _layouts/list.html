@@ -1,0 +1,18 @@
+---
+layout: page
+# Generic layout for lists of documents, e.g. the index of talks.
+---
+
+<div class="content">
+  {{ content }}
+
+  {% include utils/pagination-newer.html %}
+
+  {% for post in paginator.posts %}
+    <article class="teaser">
+      {% include teaser.html %}
+    </article>
+  {% endfor %}
+
+  {% include utils/pagination-older.html %}
+</div>
