@@ -33,3 +33,6 @@ plugins:
 
 markdown: kramdown
 highlighter: rouge
+
+disqus:
+  shortname: seddonym
