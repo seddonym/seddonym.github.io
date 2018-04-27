@@ -34,8 +34,6 @@ a {
 
 .teaser-small {
   font-size: 0.8em;
-  max-width: 15rem;
-  margin-right: 1rem;
   .item-meta {
     font-size: 0.9em;
     .item-location:before {
@@ -73,5 +71,11 @@ article {
     font-size: 1.1em;
     display: block;
     font-weight: bold;
+  }
+}
+
+@media (max-width: $large-breakpoint) {
+  h1 {
+    margin-top: 1em;
   }
 }

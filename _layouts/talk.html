@@ -2,19 +2,3 @@
 layout: detail
 ---
 {{ content }}
-{% comment %}
-<img src='{{ site.image_path }}talks/{{ page.image }}' alt='{{ page.title }}'/>
-{% include talks/talk-meta.html talk=page %}
-
-  {% if page.description %}
-    <p class='description'>{{ page.description }}</p>
-  {% endif %}
-
-  <hr>
-<div class="post-body">
-  {{ content }}
-
-</div>
-
-  <!--{% include comments/comments.html %}-->
-{% endcomment %}

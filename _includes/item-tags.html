@@ -7,9 +7,7 @@
 <div class='tags'>
   {% for tag in include.item.tags %}
     <span class="tag">
-      <a href="{{ site.baseurl }}{{ tags_page.url }}#{{ tag | slugify }}">
-        {% include utils/icon.html icon_class='fas fa-tag' %}&nbsp;{{ tag }}
-      </a>
+      {% include utils/icon.html icon_class='fas fa-tag' %}&nbsp;{{ tag }}
     </span>
   {% endfor %}
 </div>
