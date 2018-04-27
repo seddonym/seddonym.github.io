@@ -1,4 +1,0 @@
-{% assign posts=site.posts | sort:"date" | reverse %}
-{% for item in posts limit:3 %}
-  {% include teaser-small.html item=item item_type='post' %}
-{% endfor %}

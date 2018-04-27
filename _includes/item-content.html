@@ -1,14 +1,3 @@
-{% if include.item.image %}
-  <figure class='primary-illustration'>
-    <img src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
-  </figure>
-{% endif %}
-
-{% if page.description %}
-  <p class='description'>{{ page.description }}</p>
-{% endif %}
-<hr>
-
 <div class='item-content'>
   {{ content }}
   {% if page.skills_matter_link %}

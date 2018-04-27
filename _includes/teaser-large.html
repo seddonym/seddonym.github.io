@@ -1,18 +1,18 @@
-<article class="teaser">
-  {% if include.item.image %}
-    <figure class='main-illustration'>
-      <a href="{{ site.baseurl }}{{ include.item.url }}">
-        <img src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
-      </a>
-    </figure>
-  {% endif %}
-  <h2>
-    <a href="{{ site.baseurl }}{{ include.item.url }}">
-      {{ include.item.title }}
-    </a>
-  </h2>
-  {% if include.item.description %}
-    <p class='description'>{{ include.item.description }}</p>
-  {% endif %}
-  {% include item-meta.html item=include.item teaser=true %}
-</article>
+<div class="row">
+  <div class="col">
+    <div class="card flex-md-row mb-4 box-shadow h-md-250 teaser teaser-large">
+      <div class="card-body">
+        <h5 class="card-title"><a href="{{ site.baseurl }}{{ include.item.url }}">{{ include.item.title }}</a></h5>
+        {% if include.item.description %}
+          <p class='description'>{{ include.item.description }}</p>
+        {% endif %}
+        {% include item-meta.html item=include.item teaser=true %}      
+      </div>
+      {% if include.item.image %}
+        <a href="{{ site.baseurl }}{{ include.item.url }}">
+          <img class="card-img-right flex-auto d-none d-lg-block" src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -2,7 +2,31 @@
 layout: page
 # The generic template for any detail view (posts and talks).
 ---
+{% assign collection = site.collections | where: "label", page.collection | first %}
 <article>
-  {% include item-meta.html item=page %}
-  {% include item-content.html item=page %}
+  <div class="row mt-5 mb-3">
+    <div class="col">
+      {% if page.description %}
+        <p class='description'>{{ page.description }}</p>
+      {% endif %}
+    </div>
+    <div class="col-md-5">
+      <div class="text-right">
+        <h6 class='document-type'>{{ collection.title }}</h6>
+        {% include item-meta.html item=page %}
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-7'>
+        {% include item-content.html item=page %}
+    </div>
+    <div class='col-md-5'>
+      {% if page.image %}
+        <figure class='primary-illustration'>
+          <img src='{{ site.image_path }}{{ page.collection }}/{{ page.image }}' alt='{{ page.title }}'/>
+        </figure>
+      {% endif %}
+    </div>
+  </div>
 </article>

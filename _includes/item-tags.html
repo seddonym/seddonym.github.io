@@ -4,10 +4,12 @@
   {% endif %}
 {% endfor %}
 
-<span class="tag">
+<div class='tags'>
   {% for tag in include.item.tags %}
-    <a href="{{ site.baseurl }}{{ tags_page.url }}#{{ tag | slugify }}">
-      {% include utils/icon.html icon_class='fas fa-tag' %}{{ tag }}
-    </a>
+    <span class="tag">
+      <a href="{{ site.baseurl }}{{ tags_page.url }}#{{ tag | slugify }}">
+        {% include utils/icon.html icon_class='fas fa-tag' %}&nbsp;{{ tag }}
+      </a>
+    </span>
   {% endfor %}
-</span>
+</div>
