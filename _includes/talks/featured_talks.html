@@ -1,6 +1,6 @@
-<section class="related">
+<section class="col-half">
   <h3>Featured talks</h3>
   {% for item in site.talks limit:3 %}
-    {% include teaser.html item=item item_type='talk' %}
+    {% include teaser-small.html item=item item_type='talk' %}
   {% endfor %}
 </section>

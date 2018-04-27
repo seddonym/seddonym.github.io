@@ -123,3 +123,17 @@ a svg, .icon svg {
 }
 a svg { fill: $link-color; }
 .icon { vertical-align: middle; }
+
+section {
+  margin-right: 1em;
+  padding: 0 0.5em;
+  border: solid 1px #eee;
+  border-radius: 3px;
+  h3 {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    font-size: 0.7em;
+
+  }
+}

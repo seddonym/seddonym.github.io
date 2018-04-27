@@ -1,6 +1,6 @@
-<section class="related">
+<section class="col-half">
   <h3>Recent Blog Entries</h3>
   {% for item in site.posts limit:3 %}
-    {% include teaser.html item=item item_type='post' %}
+    {% include teaser-small.html item=item item_type='post' %}
   {% endfor %}
 </section>

@@ -1,0 +1,18 @@
+<div class="teaser teaser-small">
+  {% if include.item.image %}
+    <figure class='main-illustration'>
+      <a href="{{ site.baseurl }}{{ include.item.url }}">
+        <img src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
+      </a>
+    </figure>
+  {% endif %}
+  <div class='teaser-content'>
+    <h4>
+      <a href="{{ site.baseurl }}{{ include.item.url }}">
+        {{ include.item.title }}
+      </a>
+    </h4>
+    {% include item-meta.html item=include.item teaser=true %}
+  </div>
+  <div class='clear'></div>
+</div>

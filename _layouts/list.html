@@ -7,6 +7,6 @@ layout: page
   {{ content }}
   {% assign collection = site.collections | where: "label",page.collection | first %}
   {% for item in collection.docs %}
-    {% include teaser.html item=item item_type=page.item_type %}
+    {% include teaser-large.html item=item item_type=page.item_type %}
   {% endfor %}
 </div>
