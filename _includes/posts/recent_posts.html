@@ -1,6 +1,4 @@
-<section class="col-half">
-  <h3>Recent Blog Entries</h3>
-  {% for item in site.posts limit:3 %}
-    {% include teaser-small.html item=item item_type='post' %}
-  {% endfor %}
-</section>
+{% assign posts=site.posts | sort:"date" | reverse %}
+{% for item in posts limit:3 %}
+  {% include teaser-small.html item=item item_type='post' %}
+{% endfor %}

@@ -1,6 +1,6 @@
-<section class="col-half">
-  <h3>Featured talks</h3>
-  {% for item in site.talks limit:3 %}
+{% assign talks=site.documents | where: "featured",true | sort:"weight" %}
+<div class="row">
+  {% for item in talks %}
     {% include teaser-small.html item=item item_type='talk' %}
   {% endfor %}
-</section>
+</div>

@@ -7,11 +7,15 @@
 
     {% include sidebar/sidebar.html %}
 
-    <main class="container">
-      {% if page.title %}
-        <h1 class="page-title">{{ page.title }}</h1>
-      {% endif %}
-      {{ content }}
+    <main>
+      <div class='content'>
+        <div class='container-fluid'>
+          {% if page.title %}
+            <h1 class="page-title">{{ page.title }}</h1>
+          {% endif %}
+          {{ content }}
+        </div>
+      </div>
     </main>
 
   </body>

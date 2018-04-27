@@ -2,6 +2,9 @@
 layout: post
 title: Code Review Checklist
 description: A set of probing questions I use when reviewing a fellow developer's work.
+image: checklist.jpg
+featured: true
+weight: 9
 tags: [habits]
 ---
 

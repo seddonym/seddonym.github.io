@@ -1,18 +1,15 @@
-<div class="teaser teaser-small">
+{% assign collection = site.collections | where: "label", include.item.collection | first %}
+<div class="card mb-2 teaser-small">
   {% if include.item.image %}
-    <figure class='main-illustration'>
-      <a href="{{ site.baseurl }}{{ include.item.url }}">
-        <img src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
-      </a>
-    </figure>
+    <a href="{{ site.baseurl }}{{ include.item.url }}">
+      <img class="card-img-top" src="{{ site.image_path }}{{ collection.label }}/{{ include.item.image }}">
+    </a>
   {% endif %}
-  <div class='teaser-content'>
-    <h4>
-      <a href="{{ site.baseurl }}{{ include.item.url }}">
-        {{ include.item.title }}
-      </a>
-    </h4>
+  <div class="card-body">
+    <h6 class='document-type'>{{ collection.title }}</h6>
+    <h5 class="card-title"><a href="{{ site.baseurl }}{{ include.item.url }}">{{ include.item.title }}</a></h5>
+  </div>
+  <div class="card-footer">
     {% include item-meta.html item=include.item teaser=true %}
   </div>
-  <div class='clear'></div>
 </div>

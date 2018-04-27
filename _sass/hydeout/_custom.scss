@@ -1,0 +1,44 @@
+.nav-link {
+  padding: .2rem 0;
+}
+#page-links {
+  margin-bottom: 1em;
+}
+#sidebar-icon-links {
+  font-size: 1.5em;
+  .icon-link {
+    padding-left: 0.2em;
+  }
+}
+
+.card {
+  img {
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+  .card-title {
+    font-size: 1.3em;
+  }
+  a {
+    color: inherit;
+    &:hover {
+      text-decoration: none;
+      color: $blue;
+    }
+  }
+}
+
+.teaser-small {
+  font-size: 0.8em;
+  max-width: 15rem;
+  margin-right: 1rem;
+  .item-meta {
+    font-size: 0.9em;
+  }
+}
+
+.document-type {
+  text-transform: uppercase;
+  color: $gray-4;
+  font-size: 0.8em;
+}

@@ -3,5 +3,6 @@
   {% if include.item.location %}
     | <span class="item-location">{{ include.item.location }}</span>
   {% endif %}
-  &nbsp;{% include item-tags.html item=include.item %}
+  <br>
+  {% include item-tags.html item=include.item %}
 </div>

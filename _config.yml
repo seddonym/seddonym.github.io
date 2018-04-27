@@ -2,8 +2,11 @@ title:  David Seddon
 email:  david@seddonym.me
 
 collections:
+  posts:
+    title: Blog entry
   talks:
     output: true
+    title: Talk
 
 links:
   - name: Github

@@ -9,16 +9,16 @@
   Sidebar CSS assumes HTML looks like this for post pages:
 
     body
-    > #sidebar
+    > nav
       > header (primary sidebar content -- i.e. title)
         > h1 (home page only, otherwise div or span)
       > secondary nav content we may want to hide on certain pages
-    > .container
+    > main
       > h1 (non-home page)
       > .content
 
   Basic approach is to color in body, make sidebar background transparent,
-  and then fill in the .container or .content elements depending on how far
+  and then fill in the main or .content elements depending on how far
   we want the sidebar or header to stretch.
 */
 
@@ -35,7 +35,7 @@ body {
   min-height: 100vh;
 }
 
-#sidebar {
+nav {
   flex: 0 0 auto;
   padding: $section-spacing;
 
@@ -57,7 +57,7 @@ body {
 }
 
 // Container is flexbox as well -- we want content div to stretch and fill
-.container {
+main {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -70,7 +70,6 @@ body {
 .content {
   background: $body-bg;
   color: $body-color;
-  padding: $section-spacing;
 }
 
 
@@ -80,14 +79,14 @@ body {
 
 // Hide secondary nav content in sidebar
 // Hide lead paragraph in sidebar
-#sidebar {
+nav {
   header ~ *, header ~ nav, p.lead {
     display: none;
   }
 }
 
 // Make header elements blend into sidebar / background
-.container > header {
+main > header {
   background: transparent;
   color: white;
   margin: ($heading-spacing - $section-spacing)
@@ -108,7 +107,7 @@ body {
   Mobile view for home page)
 ----------------------------------------------------------- */
 
-.home #sidebar {
+.home nav {
 
   // Center sidebar content
   text-align: center;
@@ -152,7 +151,7 @@ body {
 
   /* Undo mobile CSS */
 
-  #sidebar, .home #sidebar {
+  nav, .home nav {
     width: $sidebar-width;
     text-align: left;
 
@@ -161,7 +160,7 @@ body {
     }
   }
 
-  #sidebar {
+  nav {
     .site-title {
       font-size: 3.25rem;
 
@@ -178,10 +177,10 @@ body {
     }
   }
 
-  .index #sidebar { margin-bottom: 0; }
+  .index nav { margin-bottom: 0; }
 
   // Make entire container background white to contrast against sidebar
-  .container {
+  main {
     background: $body-bg;
     color: $body-color;
     padding: $section-spacing * 2;
@@ -200,7 +199,6 @@ body {
     }
 
     > * {
-      max-width: 38rem;
       padding: 0;
     }
   }
@@ -211,7 +209,7 @@ body {
   Sidebar links + nav
 ----------------------------------------------------------- */
 
-#sidebar a {
+nav a {
   color: #fff;
 
   svg {
@@ -234,15 +232,15 @@ body {
   }
 }
 
-#sidebar nav {
+nav nav {
   display: flex;
 }
 
-#sidebar-nav-links {
+nav-nav-links {
   flex-flow: column nowrap;
 }
 
-#sidebar-icon-links {
+nav-icon-links {
   max-width: 100%;
   flex-flow: row wrap;
   justify-content: center;
@@ -254,12 +252,12 @@ body {
   }
 }
 
-#sidebar nav > * {
+nav nav > * {
   display: block;
   line-height: 1.75;
 }
 
-#sidebar nav > .icon {
+nav nav > .icon {
   font-size: 1.5rem;
   display: inline-block;
   margin: 0 0.25em;
@@ -285,13 +283,13 @@ body {
 /* -----------------------------------------------------------
   Reverse layout
 
-  Flip the orientation of the page by placing the `#sidebar`
+  Flip the orientation of the page by placing the `nav`
   on the right.
 ----------------------------------------------------------- */
 
 @if $layout-reverse {
   @media (min-width: $large-breakpoint) {
-    .container {
+    main {
       order: -1;
     }
   }

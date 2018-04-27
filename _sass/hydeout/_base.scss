@@ -15,7 +15,6 @@ body {
 }
 
 html {
-  font-family: $root-font-family;
   font-size: $root-font-size;
   line-height: $root-line-height;
 
@@ -25,6 +24,7 @@ html {
 }
 
 body {
+  font-family: $root-font-family;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
 }
