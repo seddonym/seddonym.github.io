@@ -1,26 +1,4 @@
 ---
 layout: list
-
 ---
-
-<div class="content">
-  {{ content }}
-
-  {% for talk in site.talks %}
-  <article class="post-body">
-    {% include talks/talk-meta.html talk=talk %}
-    <a href="{{ site.baseurl }}{{ talk.url }}">
-      <img src='{{ site.image_path }}talks/{{ talk.image }}' alt='{{ talk.title }}'/>
-    </a>
-    <h2 class="post-title">
-      <a href="{{ site.baseurl }}{{ talk.url }}">
-        {{ talk.title }}
-      </a>
-    </h2>
-
-    {% if talk.description %}
-      <p class='description'>{{ talk.description }}</p>
-    {% endif %}
-  </article>
-  {% endfor %}
-</div>
+{{ content }}

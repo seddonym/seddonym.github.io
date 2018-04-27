@@ -1,0 +1,13 @@
+{% for node in site.pages %}
+  {% if node.layout == "tags" %}
+    {% assign tags_page = node %}
+  {% endif %}
+{% endfor %}
+
+<span class="tag">
+  {% for tag in include.item.tags %}
+    <a href="{{ site.baseurl }}{{ tags_page.url }}#{{ tag | slugify }}">
+      {% include utils/icon.html icon_class='fas fa-tag' %}{{ tag }}
+    </a>
+  {% endfor %}
+</span>

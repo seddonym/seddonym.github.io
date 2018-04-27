@@ -1,0 +1,7 @@
+<div class="item-meta">
+  <span class="item-date">{{ include.item.date | date_to_string }}</span>
+  {% if include.item.location %}
+    | <span class="item-location">{{ include.item.location }}</span>
+  {% endif %}
+  {% include item-tags.html item=include.item %}
+</div>

@@ -5,14 +5,8 @@ layout: page
 
 <div class="content">
   {{ content }}
-
-  {% include utils/pagination-newer.html %}
-
-  {% for post in paginator.posts %}
-    <article class="teaser">
-      {% include teaser.html %}
-    </article>
+  {% assign collection = site.collections | where: "label",page.collection | first %}
+  {% for item in collection.docs %}
+    {% include teaser.html item=item item_type=page.item_type %}
   {% endfor %}
-
-  {% include utils/pagination-older.html %}
 </div>

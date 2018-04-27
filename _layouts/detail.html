@@ -2,9 +2,7 @@
 layout: page
 # The generic template for any detail view (posts and talks).
 ---
-<header>
-  <h1 class="page-title">{{ page.title }}</h1>
-</header>
-<div class="content">
-  {{ content }}
-</div>
+<article>
+  {% include item-meta.html item=page %}
+  {% include item-content.html item=page %}
+</article>

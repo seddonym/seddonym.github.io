@@ -1,11 +1,18 @@
-{% include posts/post-meta.html post=post %}
-<h2 class="post-title">
-  TEASER
-  <a href="{{ site.baseurl }}{{ post.url }}">
-    {{ post.title }}
-  </a>
-</h2>
-
-{% if post.description %}
-  <p class='description'>{{ post.description }}</p>
-{% endif %}
+<article class="teaser">
+  {% if include.item.image %}
+    <figure class='main-illustration'>
+      <a href="{{ site.baseurl }}{{ include.item.url }}">
+        <img src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
+      </a>
+    </figure>
+  {% endif %}
+  <h2>
+    <a href="{{ site.baseurl }}{{ include.item.url }}">
+      {{ include.item.title }}
+    </a>
+  </h2>
+  {% if include.item.description %}
+    <p class='description'>{{ include.item.description }}</p>
+  {% endif %}
+  {% include item-meta.html item=include.item teaser=true %}
+</article>

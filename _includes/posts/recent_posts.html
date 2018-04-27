@@ -1,15 +1,6 @@
 <section class="related">
   <h3>Recent Blog Entries</h3>
-  <ul class="posts-list">
-    {% for post in site.posts limit:3 %}
-      <li>
-        <h4>
-          <a href="{{ site.baseurl }}{{ post.url }}">
-            {{ post.title }}
-            <small>{{ post.date | date_to_string }}</small>
-          </a>
-        </h4>
-      </li>
-    {% endfor %}
-  </ul>
+  {% for item in site.posts limit:3 %}
+    {% include teaser.html item=item item_type='post' %}
+  {% endfor %}
 </section>
