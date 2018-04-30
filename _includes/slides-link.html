@@ -1,0 +1,7 @@
+{% if include.item.slides_link %}
+  <p>
+      <a class='btn btn-block btn-outline-secondary' target="_blank" href="{{ include.item.slides_link }}">
+        {% include utils/icon.html icon_class='fas fa-eye' %} View slides
+      </a>
+  </p>
+{% endif %}

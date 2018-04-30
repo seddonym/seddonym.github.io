@@ -1,3 +1,7 @@
+.container-fluid {
+  padding-right: 30px;
+}
+
 a {
   &:hover {
     text-decoration: none;
@@ -43,9 +47,13 @@ a {
 }
 
 .teaser-large {
-  .card-body {
-    width: 87em;
+  @media (min-width: 768px) {
+    .card-body {
+      width: 78em;
+      font-size: 1vw;
+    }
   }
+
   .item-meta {
     color: $gray-4;
     .tags {
@@ -64,7 +72,6 @@ a {
 article {
   .description {
     color: $gray-4;
-    margin-bottom: 2em;
     font-size: 1.5em;
   }
     .item-date, .item-location {
@@ -77,5 +84,31 @@ article {
 @media (max-width: $large-breakpoint) {
   h1 {
     margin-top: 1em;
+  }
+}
+
+@media (min-width: $large-breakpoint) and (max-width: 1400px) {
+  nav#sidebar {
+    width: 14rem;
+    .site-title {
+      font-size: 2em;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 1400px) {
+  article {
+    .heading-meta {
+      text-align: left;
+    }
+    .content-sidebar {
+      text-align: left;
+    }
   }
 }

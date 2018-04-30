@@ -9,7 +9,12 @@ layout: page
   {% assign items = collection.docs | reverse %}
   <div class='mt-5'>
     {% for item in items %}
-      {% include teaser-large.html item=item item_type=page.item_type %}
+      <div class="d-block d-xl-none">
+        {% include teaser-small.html item=item verbose=true %}
+      </div>
+      <div class="d-none d-xl-block">
+        {% include teaser-large.html item=item %}
+      </div>
     {% endfor %}
   </div>
 </div>

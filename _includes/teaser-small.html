@@ -8,6 +8,9 @@
   <div class="card-body">
     <h6 class='document-type'>{{ collection.title }}</h6>
     <h5 class="card-title"><a href="{{ site.baseurl }}{{ include.item.url }}">{{ include.item.title }}</a></h5>
+    {% if include.verbose and include.item.description %}
+      <p class='description'>{{ include.item.description }}</p>
+    {% endif %}
   </div>
   <div class="card-footer">
     {% include item-meta.html item=include.item teaser=true %}

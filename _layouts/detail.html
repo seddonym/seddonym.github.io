@@ -4,30 +4,39 @@ layout: page
 ---
 {% assign collection = site.collections | where: "label", page.collection | first %}
 <article>
-  <div class="row mb-3">
+  <div class="row xl-3 mb-5">
     <div class="col">
       {% if page.description %}
         <p class='description'>{{ page.description }}</p>
       {% endif %}
     </div>
-    <div class="col-md-5">
-      <div class="text-right">
-        <h6 class='document-type'>{{ collection.title }}</h6>
-        {% include item-meta.html item=page %}
+    <div class="col-xl-5 heading-meta">
+      <div class='card'>
+        <div class='card-body'>
+          <h6 class='document-type'>{{ collection.title }}</h6>
+          {% include item-meta.html item=page %}
+        </div>
       </div>
     </div>
   </div>
   <div class='row'>
-    <div class='col-md-7'>
+    <div class='col-xl-7 mb-2'>
         {% include item-content.html item=page %}
-        {% include comments/comments.html %}
     </div>
-    <div class='col-md-5'>
+    <div class='col-xl-5 content-sidebar'>
       {% if page.image %}
-        <figure class='primary-illustration'>
-          <img src='{{ site.image_path }}{{ page.collection }}/{{ page.image }}' alt='{{ page.title }}'/>
-        </figure>
+        {% unless page.youtube_embed_url %}
+          <figure class='primary-illustration'>
+            <img src='{{ site.image_path }}{{ page.collection }}/{{ page.image }}' alt='{{ page.title }}'/>
+          </figure>
+        {% endunless %}
       {% endif %}
+      {% include slides-link.html item=page %}
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-xl-7'>
+        {% include comments/comments.html %}
     </div>
   </div>
 </article>

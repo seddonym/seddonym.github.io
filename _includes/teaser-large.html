@@ -6,11 +6,11 @@
         {% if include.item.description %}
           <p class='description'>{{ include.item.description }}</p>
         {% endif %}
-        {% include item-meta.html item=include.item teaser=true %}      
+        {% include item-meta.html item=include.item teaser=true %}
       </div>
       {% if include.item.image %}
-        <a href="{{ site.baseurl }}{{ include.item.url }}">
-          <img class="card-img-right flex-auto d-none d-lg-block" src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
+        <a class="illustration-wrapper" href="{{ site.baseurl }}{{ include.item.url }}">
+            <img class="card-img-right flex-auto d-none d-lg-block" src='{{ site.image_path }}{{ include.item.collection }}/{{ include.item.image }}' alt='{{ include.item.title }}'/>
         </a>
       {% endif %}
     </div>
