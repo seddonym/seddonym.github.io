@@ -36,3 +36,5 @@ highlighter: rouge
 
 disqus:
   shortname: seddonym
+
+google_analytics: UA-118442361-1
