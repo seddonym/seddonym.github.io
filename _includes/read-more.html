@@ -1,8 +1,11 @@
+{% assign posts=site.collections | where: "label","posts" | first %}
+{% assign talks=site.collections | where: "label","talks" | first %}
+
 <div class="row">
   <div class="col-lg-6 mb-2">
-    <a class="btn btn-block btn-light" href="/{{ site.posts.index_url }}/">Read more blog posts</a>
+    <a class="btn btn-block btn-outline-secondary" href="/{{ posts.index_url }}/">Read more blog posts</a>
   </div>
   <div class="col-lg-6 mb-2">
-    <a class="btn btn-block btn-light" href="/{{ site.talks.index_url }}/">Watch more talks</a>
+    <a class="btn btn-block btn-outline-secondary" href="/{{ talks.index_url }}/">Watch more talks</a>
   </div>
 </div>
