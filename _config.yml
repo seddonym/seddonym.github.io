@@ -4,9 +4,11 @@ email:  david@seddonym.me
 collections:
   posts:
     title: Blog entry
+    index_url: blog
   talks:
     output: true
     title: Talk
+    index_url: talks
 
 links:
   - name: Github
