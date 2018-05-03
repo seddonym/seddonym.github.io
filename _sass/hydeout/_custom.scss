@@ -63,6 +63,15 @@ a {
   }
 }
 
+.item-content {
+  h2 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+  h3 {
+    font-size: 1.5rem;
+  }
+}
 .document-type {
   text-transform: uppercase;
   color: $gray-4;
@@ -115,4 +124,13 @@ article {
 
 .btn-light {
   color: $body-color;
+}
+
+.tip {
+  font-size: 0.8em;
+  background-color: $gray-2;
+  margin-bottom: 1em;
+  a {
+    color: $blue;
+  }
 }
