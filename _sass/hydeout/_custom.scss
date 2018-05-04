@@ -134,3 +134,15 @@ article {
     color: $blue;
   }
 }
+
+.rule {
+  margin: 1em 0;
+  padding: 1em;
+  background-color: $gray-2;
+  font-style: italic;
+  border-radius: 6px;
+}
+
+.tag {
+  margin-right: 0.5em;
+}

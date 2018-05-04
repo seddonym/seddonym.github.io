@@ -5,10 +5,10 @@ description: "Django signals are a great way of communicating between your apps.
 image: signals.jpg
 featured: true
 weight: 1
-tags: [django]
+tags: [django, architecture]
 ---
 Django provides a mechanism to send and receive messages between different parts
-of an application, called the '[signal dispatcher](https://docs.djangoproject.com/en/2.0/topics/signals/)'.
+of an application, called the '[signal dispatcher](https://docs.djangoproject.com/en/2.0/topics/signals/){:target="_blank"}'.
 I've seen signals used in
 most of the projects I've been involved in, sometimes for good, but
 sometimes for ill. At their worst, they impair readability,
@@ -22,7 +22,7 @@ used for the right reasons. Here's what I think those reasons are...
 ## Signals basics
 
 First, let's go over the basics (with thanks to [the official Django docs](https://docs.djangoproject.com/en/2.0/topics/signals/){:target="_blank"}).
-There are two key concepts: *signals* and *receivers*.
+There are two key concepts: the *Signal* and the *Receiver*.
 
 ### Concept 1: The Signal
 
@@ -35,9 +35,9 @@ from django.dispatch import Signal
 pizza_done = django.dispatch.Signal(providing_args=["toppings", "size"])
 {% endhighlight %}
 
-Signal can *send messages*. This is achieved by calling the `send` method
-on the signal instance (passing in the arguments specified above along with a required
-`sender` argument):
+Signals can *send messages*. This is achieved by calling the `send()` method
+on the signal instance (passing in a `sender` argument, along with the
+arguments specified above):
 
 {% highlight python %}
 class Pizza:
@@ -52,7 +52,8 @@ class Pizza:
 *Receivers* are callables that are *connected* to a particular signal.
 When the signal sends its message, each connected receiver gets called.
 Receivers' function signatures should match what the
-signal's `send` method uses. Here's how they get connected to the signal:
+signal's `send()` method uses. You connect a receiver to a signal using the
+`@receiver` decorator:
 
 {% highlight python %}
 from django.dispatch import receiver
@@ -81,7 +82,7 @@ the code that sent the signal.
       <code>ready()</code> method of the application configuration class.
     </p>
     <p>
-      If you follow this pattern throughout your project, you may prefer to use
+      If you follow this convention throughout your project, you may prefer to use
       module autodiscovery in a single app, which will mean the <code>receivers.py</code>
       module in every installed app will be imported:
     </p>
@@ -105,18 +106,20 @@ default_app_config = 'main.AppConfig'
 
 ## An example
 
-Let's look at a practical example. Imagine a ticket booking site that allows users
-to join waiting lists for oversubscribed events. If someone cancels their booking,
-the system should kick off a process to allow those on the waiting list to book instead,
-using the following function:
+Let's look at a practical example. Imagine we're developing a ticket booking site.
+On this site, if an event is fully booked, users can join a waiting list.
+
+We need to develop a feature where if someone cancels their booking,
+the system should kick off a process to allow those on the waiting list to book instead.
+To do this, the following function should be called when a booking is cancelled:
 
 {% highlight python %}
 def promote_waiting_list(booking):
     ...
 {% endhighlight %}
 
-We can use signals to trigger this when a booking is cancelled, by defining a custom signal to represent the cancellation
-of a booking:
+We can achieve this using signals. First, we define a custom signal that represents
+the cancellation of a booking:
 
 {% highlight python %}
 booking_cancelled = Signal(providing_args=['booking'])
@@ -127,7 +130,7 @@ Next, we send the signal at the appropriate moment:
 {% highlight python %}
 class Booking:
     def cancel(self):
-        # Other logic, such as storing the cancelled state
+        # Other logic
         ...
         booking_cancelled.send(
             sender=self.__class__,
@@ -145,8 +148,9 @@ def promote_waiting_list_when_booking_cancelled(sender, booking):
 
 ### A better way?
 
-"This all seems very well," you might say, "but isn't there a more straightforward solution?
-Why not just call the function directly from the cancel method?"
+This all seems very well, but isn't there a more straightforward solution?
+Why not just call the function directly from the cancel method like this:
+
 {% highlight python %}
 class Booking:
     def cancel(self):
@@ -154,7 +158,7 @@ class Booking:
         promote_waiting_list(self)
 {% endhighlight %}
 
-"That is, surely, much simpler and clearer?" you might say, and you would have a valid point. Surely if all a signal dispatch does is
+Much simpler and clearer. Surely, if all a signal dispatch does is
 call another function, it is needless complicating our code. Why, then, would we ever do this?
 
 ## What signals are for
@@ -165,7 +169,7 @@ The only difference is in terminology: in the Observer pattern a signal is known
 and a receiver as an 'observer'.
 
 This pattern is used to decouple the observers (receivers) from the subject (signal).
-Indeed [the Django docs](https://docs.djangoproject.com/en/2.0/topics/signals/) tell us that signals "allow decoupled applications to get notified when actions occur elsewhere".
+Indeed [the Django docs](https://docs.djangoproject.com/en/2.0/topics/signals/){:target="blank"} tell us that signals "allow decoupled applications to get notified when actions occur elsewhere".
 
 But what exactly does 'decoupled applications' mean?
 
@@ -186,7 +190,11 @@ This project is much better structured, but achieving a single flow is not alway
 
 ### The only reason to use signals
 
-And now we come to the *only reason* why you would ever want to use signals. You use them **to avoid breaking a dependency flow** (and consequently introducing a circular dependency).
+And now we come to the golden rule:
+
+<div class='rule'>
+  Only use signals to avoid introducing circular dependencies.
+</div>
 
 If you have two apps, and one app wants to trigger behaviour in an app it already knows about, *don't use signals*. The app should just import
 the function it needs and call it directly.
@@ -200,9 +208,10 @@ providing a 'hook' which the second app can exploit by connecting a receiver to 
 
 Going back to our event booking example, whether or not to use signals comes down to how we have chosen to architect our project.
 
-A good design would be to decouple the core booking logic from the waiting list logic. The core booking logic could live higher up the dependency
-chain, and be entirely ignorant of waiting lists. A separate waiting list app could then respond to the booking cancellation event, and kick off the
-processes needed to create the new bookings. That would be a great use of signals.
+In a less good design, bookings would know about waiting lists already. Since the two components are coupled together anyway, using signals would be a mistake.
+It wouldn't actually decouple anything and would just make the code even harder to maintain.
 
-On the other hand, if bookings already know about waiting lists and all the logic is coupled together already, then using signals would be a mistake.
-It doesn't actually decouple anything and would just make the code even harder to maintain.
+In a better design, the core booking logic and waiting list logic would be separated. Bookings would live higher up the dependency
+chain, and be entirely ignorant of waiting lists. Using signals would allow a separate waiting list app to respond to the
+booking cancellation event, and kick off the processes needed to create the new bookings.
+This would be impossible with a straightforward function call. That would be a great use of signals.
