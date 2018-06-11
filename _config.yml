@@ -3,7 +3,7 @@ email:  david@seddonym.me
 
 collections:
   posts:
-    title: Blog posts
+    title: Blog post
     index_url: blog
   talks:
     output: true
