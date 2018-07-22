@@ -4,7 +4,7 @@ title: When to Use Django Signals
 description: "Django signals are a great way of communicating between your apps.  But they are often misused. Find out what signals are for, when to define your own, and when to avoid them."
 image: signals.jpg
 featured: true
-weight: 1
+weight: 5
 tags: [django, architecture]
 ---
 Django provides a mechanism to send and receive messages between different parts

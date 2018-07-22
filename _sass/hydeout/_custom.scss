@@ -146,3 +146,13 @@ article {
 .tag {
   margin-right: 0.5em;
 }
+
+pre.console {
+  background-color: $gray-6;
+  color: $gray-1;
+  font-size: 0.8em;
+  padding: 1em;
+  .error {
+    color: $light-red;
+  }
+}
