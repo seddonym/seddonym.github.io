@@ -5,7 +5,7 @@ location: London Django Meetup
 description:  An architectural pattern for structuring larger Django projects.
 tags: [django, architecture]
 image: rocky-river.jpg
-featured: true
+featured: false
 weight: 1
 skills_matter_link: https://skillsmatter.com/skillscasts/10414-the-rocky-river-how-to-architect-your-django-monolith
 slides_link: http://slides.com/davidseddon/rocky-river
