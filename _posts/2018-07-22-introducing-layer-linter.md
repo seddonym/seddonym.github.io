@@ -4,7 +4,7 @@ title: Meet Layer Linter
 description: "A tool for imposing architectural constraints on your Python projects."
 image: lint.jpg
 featured: true
-weight: 1
+weight: 2
 tags: [python, architecture]
 ---
 Python is a wonderful language that is a joy to develop in. But I've found that

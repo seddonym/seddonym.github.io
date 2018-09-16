@@ -3,7 +3,7 @@ layout: post
 title: What is a Django app?
 description: "Apps are a fundamental concept in Django. But what exactly are they and when should we use them?"
 image: installed-apps.jpg
-featured: true
+featured: false
 weight: 2
 tags: [django]
 ---
