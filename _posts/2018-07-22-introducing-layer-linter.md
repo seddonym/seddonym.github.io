@@ -109,7 +109,7 @@ $ layer-lint myproject
 The report will tell you whether you're following your contract.
 
 You can define other architectural styles too, such as a more
-modular layered style which I call the '[Rocky River]({% link _talks/2017-12-12-rocky-river.md %})'. It also supports multiple
+modular layered style which I call the '[Rocky River]({% link _posts/2018-09-16-rocky-river-pattern.md %})'. It also supports multiple
 contracts. See more detailed information about how to use Layer Linter in [the docs](https://layer-linter.readthedocs.io/en/latest/usage.html).
 
 
