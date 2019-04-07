@@ -112,6 +112,11 @@ You can define other architectural styles too, such as a more
 modular layered style which I call the '[Rocky River]({% link _posts/2018-09-16-rocky-river-pattern.md %})'. It also supports multiple
 contracts. See more detailed information about how to use Layer Linter in [the docs](https://layer-linter.readthedocs.io/en/latest/usage.html).
 
+(*Note:* Since this post was written, Layer Linter has been superseded by
+[Import Linter](https://import-linter.readthedocs.io), which does everything Layer Linter does, but with more features
+and a slightly different API. There is a guide to the minor API differences
+[here](https://layer-linter.readthedocs.io/en/latest/migrating-to-import-linter.html).)
+
 
 # Further information
 
