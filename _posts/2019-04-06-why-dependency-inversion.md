@@ -1,12 +1,95 @@
 ---
 layout: post
-title: What is dependency inversion?
-description: "Dependency Inversion is a powerful but underused programming technique. Find out what what it is, and when you should use it."
+title: Python and Dependency Inversion
+description: "Dependency Inversion is a powerful programming technique. Find out what it is, and when you should apply it in your Python projects."
 image: upside-down.jpg
 featured: true
 weight: 5
-tags: [architecture, factoring]
+tags: [python, architecture, factoring]
 ---
+
+Most programmers recognise the value of an organised structure in all but the smallest of software projects. In Python,
+we can easily split code across modules and organise these modules into nested subpackages. It's a simple, powerful way
+of structuring source code.
+
+And how do we choose to split things? By the *separation of concerns*. This separation can take different forms. We
+might organize things by feature area (the authentication system, the shopping cart, the blog) or by level of detail
+(the user interface, the business logic, the database), or both.
+
+When we do this, we're aiming at modularity. We know that systems can get complicated to work with, so splitting up
+like this makes it easier to work on smaller bits of the system in isolation.
+
+Except for some reason it doesn't. In practice, working on one module turns out to relate to another part of the system,
+which relates to another, which relates back to the original module. Pretty soon your head hurts and you need to have
+a lie down.
+
+## Separation of Concerns is not enough
+
+The sad fact is, if the only organizing factor of a code base is separation of concerns, a code base it will end up
+looking like this:
+
+(diagram of web of dependencies)
+
+This is a dependency graph of a Python project. The arrows depict dependencies between modules. These dependencies
+are so easy to create in Python. Need something from another part of the system? No problem, a simple `import`
+statement makes it available.
+
+Pretty quickly, our efforts to organise what goes into each module are undermined by *the relationships between those
+modules*.
+
+The problem with a system like this is that, because of the web of dependencies, it is not a collection of smaller
+subsystems. It is not, after all, modularized. Instead, it is a single, large system - and the larger a system, the
+more difficult it is to understand and work with.
+
+This is naturally what happens to software if you don't think about dependencies. This is because in the real world
+things *are* a messy, interconnected web of connections. It's natural that as we build functionality, we realise
+that one module needs to know about another. Later on, that other module needs to know about the first, and thus a
+circular dependency is born.
+
+## Enter dependency inversion
+
+Circular dependencies are the enemy of modularity. With them, our subsystems are coupled in both directions, which
+means they aren't separate subsystems at all. We need to avoid letting them creep into our code bases. But how?
+
+Take two modules, **A** and **B**, and let's say that **A** depends on **B**. We can draw this as an arrow from
+**A** to **B**.
+
+(diagram of A -> B)
+
+Now, let's say we realise that **B** needs something from **A**. We begin to implement it, but then, alas! We realise
+we are about to introduce a circular dependency:
+
+(diagram of A <-> B)
+
+We now have two simple choices. We just have to pick an arrow, and then refactor the code so that the direction of the
+ arrow is reversed. We have removed the circular dependency.
+
+(diagram of A -> B, two arrows)
+
+This reorganization the code is dependency inversion. 
+
+In practice, this can sometimes feel impossible. Surely there is no way to reverse the direction of the arrow
+merely by refactoring? But I have good news. It is never impossible. I promise. You can *always* avoid circular
+dependencies by inverting them. It's not always the most obvious way to write code, but it can make your code base
+significantly easier to work with.
+
+There are several different techniques for *how* you reverse that arrow. One such technique is called
+'dependency injection'. I will cover some of these techniques in a future blog post, but for now I'll focus on the
+ bigger picture.
+
+---
+
+## How not to avoid circular dependencies
+
+(inline imports example)
+t's tempting to view a circular dependency as annoying niggles that need to be worked around. The classic hack
+is to move the import statement within the body of the function/method that is triggering
+
+## 
+
+There is only one way to fight this natural tendency for things to get into a mess: dependency inversion. In its
+simplest form
+
 Take two components within a software system. Let's call them **A** and **B**,
 and let's say that **A** depends on **B**. We can draw this as an arrow from **A** to **B**.
 
@@ -20,7 +103,7 @@ I should probably define my terms. By *component*, I just mean any part of a sof
 at any level of detail: a function, a class, a source file, a collection of source files, or indeed an entire
 runnable service.
 
-When I say **A** *depends on* **B**, I mean that *A* could be broken if *B* was changed in some way.
+When I say **A** *depends on* **B**, I mean that **A** could be broken if **B** was changed in some way.
 
 There are several different patterns for *how* you reverse that arrow. One such pattern is dependency injection.
 I will cover some of these patterns in a future blog post, but for now I'll focus on why you would want to invert
@@ -28,43 +111,10 @@ dependencies, and how to decide in which direction the arrows should point.
 
 # Why dependency inversion is important
 
-Most programmers recognise the need to structure their code bases by separating concerns. Rather than have one enormous
-file with code in, we will split things apart. We might organize things by feature area (the authentication system,
-the shopping cart, the blog) or by level of detail (the user interface, the business logic, the database), or both.
-But if the only organizing factor of a code base is separation of concerns, it will inevitably end up looking like this:
-
-(diagram of web of dependencies)
-
-The problem with a system like this is that, because of the web of dependencies, it is not a collection of smaller
-subsystems. It is a single, large system - and the larger a system, the more difficult it is to understand. And systems
-that are difficult to understand are difficult to work with.
-
-This is naturally what happens to software if you don't think about dependencies. This is because in the real world
-things *are* a messy, interconnected web of connections. It's natural that as we build functionality, we realise
-that one component needs to know about another component. Later on, that other component needs to know about the first
-component, and thus a circular dependency is born.
-
-There is only one way to fight this natural tendency for things to get into a mess: dependency inversion. Once you
-realise that it is possible to invert the direction of *any* dependency, the web of
-connections can be tamed.
 
 
-# Avoiding complications
 
-Perhaps the reason why dependency inversion is underused is because it is not usually the obvious thing to do. If there
-is a real world concept in which the dependency works in one direction, it can feel strange to invert it.
 
-The [Zen of Python](https://en.wikipedia.org/wiki/Zen_of_Python) states:
-
-    Simple is better than complex.
-
-But also that
-
-    Complex is better than complicated.
-
-I think of dependency inversion as an example of choosing the complex over the complicated. If we don't use it when
-it's needed, our efforts to create a simple system will tangle into complications. Inverting dependencies allows us
-to trade a little simplicity, but allowing us to avoid a system that is complicated to work with.
 
 # How should your dependencies look?
 
@@ -126,3 +176,41 @@ as:
     Details should depend on abstractions.
 </div>
 
+Truly counterintuitive. We're used to higher level code depending on lower level code. This turns it on its head and
+says that lower level code (the details) should depend on the high level code (policies, business logic etc.)
+
+Hexagonal Architecture puts high level code upstream of the lower level code, and attempts to decouple things as much
+as possible. Ports and adaptors.
+
+(dependency graph with business logic plugging into ports, then application, then adaptors)
+
+The advantage of this approach is that your business logic is isolated from implementation details. This means you
+can test your most critical code quickly with unit tests by using in-memory adaptors when you test.
+
+A second benefit is that it encourages you to focus on your conceptual models, without getting too dragged into
+implementation details. This is particularly good if you are working within a domain where the business logic itself
+is complex.
+
+Notice still a DAG, but one with a more specific structure.
+
+
+# Conclusion: complex is better than complicated
+
+When structuring projects, it's not enough just to separate concerns: you must control the dependency flow, otherwise
+things will get messy and difficult to work with. Whichever shape you choose for your system's dependency graph,
+you will sometimes need to make the dependency flow in the opposite direction to what comes naturally.
+That is dependency inversion.
+
+If there is a real world concept in which the dependency works in one direction, it can feel strange to invert it.
+
+The [Zen of Python](https://en.wikipedia.org/wiki/Zen_of_Python) states:
+
+    Simple is better than complex.
+
+But also that
+
+    Complex is better than complicated.
+
+I think of dependency inversion as an example of choosing the complex over the complicated. If we don't use it when
+it's needed, our efforts to create a simple system will tangle into complications. Inverting dependencies allows us
+to trade a little simplicity, but allowing us to avoid a system that is complicated to work with.
