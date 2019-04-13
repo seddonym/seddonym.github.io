@@ -1,14 +1,14 @@
 ---
 layout: post
 title: Python and Dependency Inversion
-description: "Dependency Inversion is a powerful programming technique. Find out what it is, and when you should apply it in your Python projects."
+description: "Dependency inversion is a powerful programming technique. Find out what it is, and when you should apply it in your Python projects."
 image: upside-down.jpg
 featured: true
 weight: 5
 tags: [python, architecture, factoring]
 ---
 
-Most programmers recognise the value of an organised structure in all but the smallest of software projects. In Python,
+Most programmers recognise the value of organised structure in all but the smallest of software projects. In Python,
 we can easily split code across modules and organise these modules into nested subpackages. It's a simple, powerful way
 of structuring source code.
 
@@ -16,43 +16,75 @@ And how do we choose to split things? By the *separation of concerns*. This sepa
 might organize things by feature area (the authentication system, the shopping cart, the blog) or by level of detail
 (the user interface, the business logic, the database), or both.
 
-When we do this, we're aiming at modularity. We know that systems can get complicated to work with, so splitting up
-like this makes it easier to work on smaller bits of the system in isolation.
+When we do this, we tend to be aiming at modularity. We know that systems can get complicated to work with, so
+separating concerns like this makes it easier to work on smaller bits of the system in isolation.
 
 Except for some reason it doesn't. In practice, working on one module turns out to relate to another part of the system,
 which relates to another, which relates back to the original module. Pretty soon your head hurts and you need to have
-a lie down.
+a lie down. What's going wrong?
 
-## Separation of Concerns is not enough
+## Separation of concerns is not enough
 
-The sad fact is, if the only organizing factor of a code base is separation of concerns, a code base it will end up
-looking like this:
-
-(diagram of web of dependencies)
-
-This is a dependency graph of a Python project. The arrows depict dependencies between modules. These dependencies
-are so easy to create in Python. Need something from another part of the system? No problem, a simple `import`
-statement makes it available.
+The sad fact is, if the only organizing factor of a code base is separation of concerns, a code base will not be
+modular after all. Instead, separate parts will tangle together, and it will become increasingly difficult to work with.
 
 Pretty quickly, our efforts to organise what goes into each module are undermined by *the relationships between those
 modules*.
 
-The problem with a system like this is that, because of the web of dependencies, it is not a collection of smaller
-subsystems. It is not, after all, modularized. Instead, it is a single, large system - and the larger a system, the
-more difficult it is to understand and work with.
-
-This is naturally what happens to software if you don't think about dependencies. This is because in the real world
+This is naturally what happens to software if you don't think about relationships. This is because in the real world
 things *are* a messy, interconnected web of connections. It's natural that as we build functionality, we realise
-that one module needs to know about another. Later on, that other module needs to know about the first, and thus a
-circular dependency is born.
+that one module needs to know about another. Later on, that other module needs to know about the first.
 
-## Enter dependency inversion
+The problem with a system like this is that, because of the web of relationships, it is not a collection of smaller
+subsystems. Instead, it is a single, large system - and the larger a system, the more difficult it is to understand and
+work with.
+
+## Dependency graphs
+
+These relationships between modules can be thought of as *dependencies*.
+
+In Python, the most obvious dependency is if one module imports another module. Another common form is when a function
+in one module expects a particular type of object as an argument.
+
+We can represent the dependencies of any project as a [directed graph](https://en.wikipedia.org/wiki/Directed_graph),
+which is simply a network of items with arrows drawn between them. The arrows are usually drawn towards the module
+being depended on: so if there is an arrow from A to B, we say A depends on B. We call such a representation a
+*dependency graph*.
+
+(dependency graph)
+
+## Circular dependencies
+
+Let's look at a graph of a system whose web of relationships is out of control:
+
+(tangled dependency graph)
+
+Here we see a tangled mess of connections. One can trace the reason for this tangle back to one problem:
+it has cycles between its items. These cycles are what we call circular dependencies.
+
+## The Directed Acyclic Graph
+
+There is a specific name for a Directed Graph that has no cycles: a
+[Directed Acyclic Graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph), or DAG. In other
+words, you could not start at one point and follow the arrows around until you returned to that same point.
+
+Here's an example of one:
+
+(pic of DAG)
+
+If you want a modular, maintainable code base, then this is the overall shape that you're striving for.
+
+Notic the clear direction of flow: the arrows are all pointing downward.
+You can think of it like a river, with the water all flowing downhill. Using this metaphor, we can talk about modules
+that are being imported as 'upstream', while modules doing the importing as 'downstream'. This is a useful turn of
+phrase, especially if the dependencies are via several intermediate modules. 
+
+# Enter dependency inversion
 
 Circular dependencies are the enemy of modularity. With them, our subsystems are coupled in both directions, which
 means they aren't separate subsystems at all. We need to avoid letting them creep into our code bases. But how?
 
-Take two modules, **A** and **B**, and let's say that **A** depends on **B**. We can draw this as an arrow from
-**A** to **B**.
+Take two modules, **A** and **B**, and let's say that **A** depends on **B**.
 
 (diagram of A -> B)
 
@@ -61,12 +93,12 @@ we are about to introduce a circular dependency:
 
 (diagram of A <-> B)
 
-We now have two simple choices. We just have to pick an arrow, and then refactor the code so that the direction of the
- arrow is reversed. We have removed the circular dependency.
+There's only one way to avoid the cycle. We pick an arrow, and then refactor the code so that the direction of the
+ arrow is reversed. Once that's done, the circular dependency is gone.
 
 (diagram of A -> B, two arrows)
 
-This reorganization the code is dependency inversion. 
+This refactoring is dependency inversion. 
 
 In practice, this can sometimes feel impossible. Surely there is no way to reverse the direction of the arrow
 merely by refactoring? But I have good news. It is never impossible. I promise. You can *always* avoid circular
@@ -74,16 +106,78 @@ dependencies by inverting them. It's not always the most obvious way to write co
 significantly easier to work with.
 
 There are several different techniques for *how* you reverse that arrow. One such technique is called
-'dependency injection'. I will cover some of these techniques in a future blog post, but for now I'll focus on the
- bigger picture.
+'dependency injection'. I will cover some of these techniques in part two of this series, but in this post I'll focus
+on the bigger picture.
+
+# Your code base's overall shape
+
+We've just looked at two modules in isolation. It's all very well avoiding cycles in a simple example like this, but
+how on earch are we meant to achieve this across a code base with hundreds or thousands of modules? What would that
+even look like?
+
+# Achieving DAGs in practice
+
+Organising a code base's dependencies as a DAG needs both design and process.
+
+## Designing your project's dependencies
+
+Deciding on the relationships between modules in your code base is an act of design - that's why it's called
+software architecture.
+
+### Level-specific graphs
+
+The first thing to realise is that if your system is large, designing a dependency graph between every module within it
+will be much too detailed to be useful. Instead, you should only consider modules all at one level.
+
+(Top level graph)
+
+In this example, we are only depicting the first level modules ( the immediate children of the top level package). All
+dependencies between deeper descendants have been summarized into dependencies between their first level ancestors.
+So, the arrow from `mypackage.green` to `mypackage.blue` could be a result an import of `mypackage.green.foo` by
+`mypackage.blue.bar`.
+
+Level-specific graphs like this occur throughout the system: `mypackage.green` might also have a graph of its own:
+
+(graph for mypackage.green)
+
+The first thing you need to decide is which of these graphs you care about. How far you take it is up to you: some
+subpackages may be small enough that they don't need as much management to prevent mess.  You can choose the parts
+of your system that are in danger of getting overcomplicated, and aim to make them DAGs. If you're not sure, you
+should usually just pick one to begin with: the first level graph.
+
+### Dependency ordering
+
+Once you've chosen which graph to focus on, it's time to define its structure. The simplest way to do this is to decide
+on a dependency order. This is simply a list of modules, from downstream to upstream. Here's an example:
+
+```
+- mypackage.green
+- mypackage.blue
+- mypackage.orange
+- mypackage.yellow
+- mypackage.purple
+- mypackage.red
+```
+
+This list describes a code base in which each modules may import from lower down the list, but not higher up. If you
+follow this rule, you'll have a DAG.
+
+If you want to add a further constraint, you could also allow multiple items per line:
+
+```
+- mypackage.green
+- mypackage.blue
+- mypackage.orange, mypackage.yellow
+- mypackage.purple
+- mypackage.red
+```
+
+In this example, items on the same line must be independent (i.e neither can import from each other).
+
+Although DAGs can have a more complex structure, this is a simple way of designing a code base free from
+cycles (at least at the level of the list).
 
 ---
-
-## How not to avoid circular dependencies
-
-(inline imports example)
-t's tempting to view a circular dependency as annoying niggles that need to be worked around. The classic hack
-is to move the import statement within the body of the function/method that is triggering
 
 ## 
 
@@ -125,12 +219,6 @@ We'll look at each in turn.
 
 ## Option one: DAG
 
-**DAG** stands for [Directed Acyclic Graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph). This is a
-mathematical structure consisting of points, and arrows connecting those points, where there are no cycles. In other
-words, you could not start at one point and follow the arrows around until you returned to that same point. Here's a
-picture of one:
-
-(diagram of DAG)
 
 This is a great shape for a code base. In programming parlance, we might simply say, 'there are no circular
 dependencies'.
