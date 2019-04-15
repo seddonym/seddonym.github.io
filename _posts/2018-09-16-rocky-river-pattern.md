@@ -4,7 +4,7 @@ title: A Guide to the Rocky River
 description: "Without a planned structure, larger Python projects can become a complicated web of interdependencies. The Rocky River is an architectural pattern to help make larger projects easier to work with."
 image: rockyriver.jpg
 featured: true
-weight: 1
+weight: 2
 tags: [python, architecture, django]
 ---
 

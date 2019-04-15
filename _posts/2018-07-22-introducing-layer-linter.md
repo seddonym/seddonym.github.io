@@ -3,7 +3,7 @@ layout: post
 title: Meet Layer Linter
 description: "A tool for imposing architectural constraints on your Python projects."
 image: lint.jpg
-featured: true
+featured: false
 weight: 2
 tags: [python, architecture]
 ---
