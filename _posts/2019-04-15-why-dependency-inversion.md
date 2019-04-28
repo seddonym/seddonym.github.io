@@ -27,7 +27,7 @@ we often neglect it. To those unfamiliar with the idea, it may seem a bizarre or
 most systems, it's crucial if we want avoid our code getting into a mess.
 
 {% include tips/open.html %}    
-  <p>This definition of dependency inversion is a bit looser than the kind described by the
+  <p>My definition of dependency inversion is a bit looser than the kind described by the
   well known design principle the
   <a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">Dependency Inversion Principle</a>,
   which is more prescriptive about the directions of dependencies. I'll write more about the DIP in a future
