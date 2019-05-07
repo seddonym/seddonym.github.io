@@ -32,7 +32,7 @@ define the following signal to represent a pizza having finished cooking:
 {% highlight python %}
 from django.dispatch import Signal
 
-pizza_done = django.dispatch.Signal(providing_args=["toppings", "size"])
+pizza_done = Signal(providing_args=["toppings", "size"])
 {% endhighlight %}
 
 Signals can *send messages*. This is achieved by calling the `send()` method
