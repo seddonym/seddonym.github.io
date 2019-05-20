@@ -3,7 +3,7 @@ layout: post
 title: When to Use Django Signals
 description: "Django signals are a great way of communicating between your apps.  But they are often misused. Find out what signals are for, when to define your own, and when to avoid them."
 image: signals.jpg
-featured: true
+featured: false
 weight: 5
 tags: [django, architecture]
 ---
