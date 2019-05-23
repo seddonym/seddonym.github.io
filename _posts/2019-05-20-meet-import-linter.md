@@ -86,9 +86,9 @@ root_package = mypackage
 name = My three-tier layers contract
 type = layers
 layers=
-    high
-    medium
-    low
+    interfaces
+    domain
+    data
 containers=
     mypackage
 </pre>
