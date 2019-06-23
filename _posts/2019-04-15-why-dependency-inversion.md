@@ -95,8 +95,27 @@ In this diagram we see that **A** depends on **B**, but **B** also depends upon 
 circular dependency. As a result, these two modules are in fact no less complicated than a single module.
 How can we improve things?
 
-It's time for a spot of dependency inversion. If we reverse one of the arrows, then we eliminate the circular dependency
-and limit the flow of dependencies to a single direction:
+## Extracting a shared dependency
+
+Often, removing the cycle is a simple case of extracting a shared dependency into its own module. Take these two
+modules:
+
+{% include content_illustration.html image="why-di/a-with-inner.png" alt="A with an inner component A&prime;, which both B and the rest of A depend on" %}
+
+In this case, the cause of the circular dependency is a submodule within **A**, which we'll call **A&prime;**, that
+both **B** and the rest of **A** depend on. The cycle is easily eliminated by pulling **A&prime;** into its
+own module.
+
+{% include content_illustration.html image="why-di/inner-extracted.png" alt="B with arrows pointing to A and A&prime;, and A also pointing to A&prime;" %}
+
+This refactoring is usually a simple matter of moving some code from one file to another. This isn't dependency inversion,
+but it's an option you should consider first, if it's possible.
+
+## When you can't extract a shared dependency, use inversion instead 
+
+When the relationship between two modules is fundamentally cyclical, it's time for a spot of dependency inversion.
+If we reverse one of the arrows, then we eliminate the circular dependency and limit the flow of dependencies to a
+single direction:
 
 {% include content_illustration.html image="why-di/a_b_acyclic.png" alt="Two arrows, both pointing from B to A" %}
 
