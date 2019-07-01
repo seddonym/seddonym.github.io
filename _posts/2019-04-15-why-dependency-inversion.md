@@ -2,7 +2,7 @@
 layout: post
 title: What is dependency inversion and why does it matter?
 description: >
-    Dependency inversion is a powerful technique for improving the modularity of software. Without it,
+    Dependency inversion is a powerful tactic for improving the modularity of software. Without it,
     systems will naturally become tangled and difficult to understand.
 image: upside-down.jpg
 featured: true
@@ -122,7 +122,7 @@ single direction:
 Now that **A** has no knowledge of **B**, we think about **A** in isolation. We've just reduced our mental overhead,
 and made the system more modular.
 
-The technique remains useful for larger groups of modules. For example, three modules may depend upon each other, in
+The tactic remains useful for larger groups of modules. For example, three modules may depend upon each other, in
 a cycle:
 
 {% include content_illustration.html image="why-di/abc_cycle.png" alt="Arrows pointing from A to B to C, and back to A" %}
