@@ -89,7 +89,7 @@ subsystems. Instead, it is a single, large system - and large systems tend to be
 The crucial problem here is that the modules, while appearing separate, are *tightly coupled* by their dependencies
 upon one other. Let's take two modules as an example:
 
-{% include content_illustration.html image="why-di/a_b_cycle.png" alt="Arrows pointing in both directions between A and B" %}
+{% include content_illustration.html image="why-di/a-b-cycle.png" alt="Arrows pointing in both directions between A and B" %}
 
 In this diagram we see that **A** depends on **B**, but **B** also depends upon **A**. It's a
 circular dependency. As a result, these two modules are in fact no less complicated than a single module.
@@ -100,13 +100,13 @@ How can we improve things?
 Often, removing the cycle is a simple case of extracting a shared dependency into its own module. Take these two
 modules:
 
-{% include content_illustration.html image="why-di/a-with-inner.png" alt="A with an inner component A&prime;, which both B and the rest of A depend on" %}
+{% include content_illustration.html image="why-di/b-with-inner.png" alt="B with an inner component B&prime;, which both A and the rest of B depend on" %}
 
-In this case, the cause of the circular dependency is a submodule within **A**, which we'll call **A&prime;**, that
-both **B** and the rest of **A** depend on. The cycle is easily eliminated by pulling **A&prime;** into its
+In this case, the cause of the circular dependency is a submodule within **B**, which we'll call **B&prime;**, that
+both **A** and the rest of **B** depend on. The cycle is easily eliminated by pulling **B&prime;** into its
 own module.
 
-{% include content_illustration.html image="why-di/inner-extracted.png" alt="B with arrows pointing to A and A&prime;, and A also pointing to A&prime;" %}
+{% include content_illustration.html image="why-di/inner-extracted.png" alt="A with arrows pointing to B and B&prime;, and B also pointing to B&prime;" %}
 
 This refactoring is usually a simple matter of moving some code from one file to another. This isn't dependency inversion,
 but it's an option you should consider first, if it's possible.
