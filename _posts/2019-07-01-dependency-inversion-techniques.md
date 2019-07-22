@@ -5,7 +5,7 @@ description: >
     In my previous post we learned how Dependency Inversion can help modularise
     code. But how do we do this in practice? Here are three distinct techniques
     you can use in Python.
-image: upside-down.jpg
+image: di-techniques.jpg
 featured: true
 weight: 1
 tags: [python, architecture, factoring, dependency-inversion]
@@ -79,6 +79,7 @@ The top level code then passes in the ``print`` function via the argument:
 
 {% highlight python %}
 # main.py
+
 import hello_world
 
 if __name__ == "__main__":
@@ -89,6 +90,7 @@ Or, if it wanted to print everything twice, it could inject a different dependen
 
 {% highlight python %}
 # main.py
+
 from hello_world import hello_world
 from print_twice import print_twice
 
@@ -297,50 +299,14 @@ say, a list - if you prefer linking things up in a configuration file, rather th
 
 # Conclusion
 
-I hope these examples have shown how easy it is to manipulate dependencies. The examples are
-as simple as I could think of.
+I hope these examples, which were as simple as I could think of, have shown how easy it is to invert or manipulate dependencies.
+While it's not always the most obvious way to structure things, it can be achieved with very little extra code.
 
----
-## A word on interfaces
+In the real world, you may find the need to put a bit more structure around the techniques. I often choose classes rather
+than functions as the swappable dependencies, as they allow you to declare the interface (i.e. the methods that may be
+called on the object) in a more formal way. Dependency injection, too, has more sophisticated implementations, and
+there are even some third party frameworks available.
 
-Before we look at these techniques, let's reflect for a moment on the importance of *interfaces*.
-
-In certain strictly typed object oriented languages such as Java, an interface is a way of defining a set of available
-class methods without actually implementing them. Once you've defined an interface, you can *implement* that interface
-on a variety of classes. You can then know that any class that implements that interface can be interacted with in
-a particular way, using those defined methods.
-
-In Python, we can be somewhat looser with our definition. We can approximate Java-style interfaces by creating classes
-that have certain methods that just raise ``NotImplementedError``. However, you can also think of any function as having
-an interface. Although there is no formal way to declare it, if two functions have the same signatures, then they share
-an interface. You can even think of modules as sharing interfaces with other modules, if they contain functions with
-the same names and signatures.
-
-When you invert dependencies, a defined interface is crucial. It's what enables the code to know how to interact
-with something *without knowing specifically what it is*. (In Python, this is sometimes known as 'duck typing'.)
-
-In the examples that follow we'll explore this c:
-
-{% highlight python %}
-def hello_world():
-    print("Hello, world.")
-{% endhighlight %}
-
-``hello_world`` has one dependency that we're going to invert: the built in ``print`` function. In this context,
-``print``'s interface is 
-
-a simple function
-as a swappable dependency. It's a function that takes a single argument, which it will print.
-At first, we can use the builtin ``print`` function to do this, as it supports that interface.
-
-The function we'll be swapping is called ``print_twice``:
-
-{% highlight python %}
-# print_twice.py
-
-def print_twice(text):
-    print(text)
-    print(text)
-{% endhighlight %}
-
-This function provides the same interface, which is why we can swap it in.
+Whichever approaches you take, the important thing to remember is that the structure of dependencies in a software package is
+crucial to how easy it will be to understand and change. These techniques give you the power to design this structure.
+Use them wisely!
