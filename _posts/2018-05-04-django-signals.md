@@ -141,8 +141,8 @@ class Booking:
 Finally, we define a receiver to kick start the waiting list process:
 
 {% highlight python %}
-@receiver(booking_cancelled):
-def promote_waiting_list_when_booking_cancelled(sender, booking):
+@receiver(booking_cancelled)
+def promote_waiting_list_when_booking_cancelled(sender, booking, **kwargs):
     promote_waiting_list(booking)
 {% endhighlight %}
 
