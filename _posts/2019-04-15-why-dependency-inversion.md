@@ -6,7 +6,7 @@ description: >
     systems will naturally become tangled and difficult to understand.
 image: upside-down.jpg
 featured: true
-weight: 1
+weight: 2
 tags: [architecture, factoring, dependency-inversion]
 ---
 

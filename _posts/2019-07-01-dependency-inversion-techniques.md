@@ -2,14 +2,47 @@
 layout: post
 title: Techniques for Dependency Inversion in Python
 description: >
-    In my previous post we learned how Dependency Inversion can help modularise
-    code. But how do we do this in practice? Here are three distinct techniques
+    In <a href="/2019/04/15/why-dependency-inversion/">my previous post</a> we learned how
+    Dependency Inversion can help modularise code. But how do we do this in practice? Here are three distinct techniques
     you can use in Python.
 image: di-techniques.jpg
 featured: true
 weight: 1
 tags: [python, architecture, factoring, dependency-inversion]
 ---
+
+Dependency Inversion is less complicated than it sounds. There are a few different techniques, but they tend to follow
+the same basic pattern. Before we learn about the techniques, let's understand the pattern.
+
+Take the following two packages. ``A`` depends on ``B``, but we don't want it to.
+
+(A -> B)
+
+Our first step is to identify the *interface* that ``B`` presents to ``A``. If ``B`` is a function, this could simply
+be its arguments. If it's a class, then maybe it's the methods that ``A`` calls. It could even be a module containing
+some functions. ``B`` should then be broken apart into its *abstraction* (which, at a minimum, defines its interface)
+and its *implementation* (which makes it possible for ``A`` to interact with ``B``.)
+
+Consider these classes:
+
+{% highlight python %}
+class Animal:
+    def speak(self):
+        raise NotImplementedError
+
+class Cat(Animal):
+    def speak(self):
+        print("Meow.")
+
+class Dog(Animal):
+    def speak(self):
+        print("Woof.")
+{% endhighlight %}
+
+
+
+``print_once`` and ``print_twice`` share an interface: they can each be called with a `text` argument. As for
+the abstraction, because these are plain functions, it doesn't need to be defined in 
 
 The three techniques we'll be looking at are:
 
@@ -21,8 +54,6 @@ The three techniques we'll be looking at are:
   <p>If you haven't read <a href="{% link _posts/2019-04-15-why-dependency-inversion.md %}">my previous post on dependency inversion</a>,
   you might want to first.</p>
 {% include tips/close.html %}
-
-# Hello, world
 
 In the examples that follow, we'll be playing with a very simple function:
 
@@ -60,7 +91,7 @@ def print_twice(text):
     print(text)
 {% endhighlight %}
 
-# Technique One: Dependency Injection
+## Technique One: Dependency Injection
 
 Dependency Injection is where a piece of code allows the calling code to control its dependencies.
 The simplest way to implement this is as a function argument.
@@ -104,14 +135,14 @@ With very little code, we have moved the dependency out of ``hello_world``, into
 
 (Diagram of main -> hello_world, main -> print)
 
-# Technique Two: Registry
+## Technique Two: Registry
 
 A registry is a store that one piece of code reads from to decide how to behave, which may be
 written to by other parts of the system. Registries require a bit more machinery that dependency injection. 
 
 They take two forms: *Configuration* and *Subscriber*:
 
-## The Configuration Registry
+### The Configuration Registry
 
 A configuration registry gets populated once, and only once. A piece of code uses one
 to allow its behaviour to be configured from outside.
@@ -151,7 +182,7 @@ In a real world system, we might want a slightly more sophisticated config syste
 (making it immutable for example, is a good idea). But at heart, any key-value store
 will do.
 
-## The Subscriber Registry
+### The Subscriber Registry
 
 In contrast to a configuration registry, which should only be populated once, a
 subscriber registry may be populated an arbitrary number of times by different parts
@@ -194,7 +225,7 @@ A diagram of this system would be:
  
 (Pic of john and martha both pointing to hello people)
 
-### Subscribing to events
+#### Subscribing to events
 
 A very common reason for using a subscriber registry is to allow other parts of a system to react to events
 that happen one place, without that place directly calling them. This is often solved by the [Observer Pattern](https://sourcemaking.com/design_patterns/observer),
@@ -223,7 +254,7 @@ def write_to_log():
 hello_world.subscribers.append(write_to_log)
 {% endhighlight %}
 
-# Technique Three: Monkey Patching
+## Technique Three: Monkey Patching
 
 Monkey patching is the technique of dynamically manipulating code that is called elsewhere. This is usually unwise,
 but I'm including it for completeness.
@@ -247,11 +278,11 @@ Monkey patching can take other forms, too. There may be a class that is defined 
 that you can then manipulate to your heart's content elsewhere - changing attributes, swapping in other methods,
 etc.
 
-# Choosing a technique
+## Choosing a technique
 
 Given these three techniques, which should you choose, and when?
 
-## When to use monkey patching
+### When to use monkey patching
 
 Code that abuses the Python's dynamic power can be extremely
 difficult to understand or maintain. The problem is that if you are reading monkey patched code, you have no way of
@@ -265,18 +296,17 @@ These expose an API that formally provides the hooks that other code can use to 
 to reason about and predict.
 
 A legitimate exception is in tests, where you can make use of ``unittest.mock.patch``. This is monkey patching, but it's
-a pragmatic way to manipulate dependencies when testing code. Even then, some people argue that mocky tests are
+a pragmatic way to manipulate dependencies when testing code. Even then, some people view testing like this as
 a code smell.
 
-## When to use dependency injection
+### When to use dependency injection
 
 If your dependencies change at runtime, you'll need dependency injection. Its alternative, the registry,
 is best kept immutable. You don't want to be changing what's in a registry, except at application start up.
 
-A good example of a Python library that uses dependency injection for this reason is the
-[``json``](https://docs.python.org/3/library/json.html) module from the standard library.
-``json.dumps``, which serializes a Python object to a JSON string, allows you to pass in a custom encoder class, if the
-default encoding doesn't support what you're trying to serialize.
+[``json.dumps``](https://docs.python.org/3/library/json.html) is a good example from the standard library which uses
+dependency injection. It serializes a Python object to a JSON string, but if the default encoding doesn't support what
+you're trying to serialize, it allows you to pass in a custom encoder class.
 
 Even if you don't need dependencies to change, dependency injection is a good technique if you want a really simple way
 of overriding dependencies, and don't want the extra machinery of configuration.
@@ -285,18 +315,27 @@ However, if you are having to inject the same dependency a lot, you might find y
 repetitive. This can also happen if you only need the dependency quite deep in the call stack, and are having to pass
 it around a lot of functions.
 
-## When to use registries
+### When to use registries
 
 Registries are a good choice if the dependency can be fixed at start up time. While you may always use dependency injection
 instead, the registry is a good way to keep configuration separate from the control flow code. If there is already a
 configuration system in place (e.g. if you're using a framework that has a way of providing global configuration) then
 there's very little extra machinery to set up.
 
-Use a configuration registry when you need something configured to a single value; use a subscriber registry for an
-arbitrary number of values. You may also use a configuration registry in place of a subscriber registry for configuring,
+Use a configuration registry when you need something configured to a single value. A good example of this is Django's ORM,
+which provides a Python API around different database engines. The ORM does not depend on any one database engine; instead,
+you [configure your project to use a particular database engine](https://docs.djangoproject.com/en/2.2/ref/settings/#databases)
+via Django's configuration system.  
+ 
+Use a subscriber registry for an arbitrary number of values. Another example from Django is
+[the admin site](https://docs.djangoproject.com/en/2.2/ref/contrib/admin/), which allows you to register different
+database tables with it, exposing a CRUD interface in the UI. As mentioned before, subscriber registries are also good
+for pub/sub.
+
+Configuration registries can be used in place of subscriber registries for configuring,
 say, a list - if you prefer linking things up in a configuration file, rather than scattered throughout the application.
 
-# Conclusion
+## Conclusion
 
 I hope these examples, which were as simple as I could think of, have shown how easy it is to invert or manipulate dependencies.
 While it's not always the most obvious way to structure things, it can be achieved with very little extra code.
@@ -307,6 +346,6 @@ called on the object) in a more formal way. Dependency injection, too, has more 
 there are even some third party frameworks available.
 
 Whichever approaches you take, the important thing to remember is that the structure of dependencies in a software package is
-crucial to how easy it will be to understand and change. It's easy to follow the path of least resistance and
-structure dependencies in a way which is, in fact, less easy to work with. These techniques give you the power to make
+crucial to how easy it will be to understand and change. Following the path of least resistance can result in dependencies
+ being structured in ways that are, in fact, harder to work with. These techniques give you the power to make
 decisions about this structure. Use them wisely!
