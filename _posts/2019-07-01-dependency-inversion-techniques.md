@@ -3,48 +3,14 @@ layout: post
 title: Techniques for Dependency Inversion in Python
 description: >
     In <a href="/2019/04/15/why-dependency-inversion/">my previous post</a> we learned how
-    Dependency Inversion can help modularise code. But how do we do this in practice? Here are three distinct techniques
-    you can use in Python.
+    Dependency Inversion can help modularise code. But how do we do this in practice?
 image: di-techniques.jpg
 featured: true
 weight: 1
 tags: [python, architecture, factoring, dependency-inversion]
 ---
 
-Dependency Inversion is less complicated than it sounds. There are a few different techniques, but they tend to follow
-the same basic pattern. Before we learn about the techniques, let's understand the pattern.
-
-Take the following two packages. ``A`` depends on ``B``, but we don't want it to.
-
-(A -> B)
-
-Our first step is to identify the *interface* that ``B`` presents to ``A``. If ``B`` is a function, this could simply
-be its arguments. If it's a class, then maybe it's the methods that ``A`` calls. It could even be a module containing
-some functions. ``B`` should then be broken apart into its *abstraction* (which, at a minimum, defines its interface)
-and its *implementation* (which makes it possible for ``A`` to interact with ``B``.)
-
-Consider these classes:
-
-{% highlight python %}
-class Animal:
-    def speak(self):
-        raise NotImplementedError
-
-class Cat(Animal):
-    def speak(self):
-        print("Meow.")
-
-class Dog(Animal):
-    def speak(self):
-        print("Woof.")
-{% endhighlight %}
-
-
-
-``print_once`` and ``print_twice`` share an interface: they can each be called with a `text` argument. As for
-the abstraction, because these are plain functions, it doesn't need to be defined in 
-
-The three techniques we'll be looking at are:
+Dependency Inversion is less complicated than it sounds. In Python, you may use three different techniques:
 
 1. *Dependency Injection.*
 2. *Registry* - which comes in two forms: *Configuration Registry* and *Subscriber Registry*.
@@ -55,7 +21,122 @@ The three techniques we'll be looking at are:
   you might want to first.</p>
 {% include tips/close.html %}
 
-In the examples that follow, we'll be playing with a very simple function:
+## The Dependency Inversion Principle
+
+The first two techniques follow an important software design principle known as
+**[The Dependency Inversion Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle)**, which states
+that "details should depend upon abstractions". What does this mean?
+
+### Details and abstractions
+
+Consider these classes:
+
+{% highlight python %}
+class Animal:
+    def speak(self):
+        raise NotImplementedError
+
+
+class Cat(Animal):
+    def speak(self):
+        print("Meow.")
+
+
+class Dog(Animal):
+    def speak(self):
+        print("Woof.")
+{% endhighlight %}
+
+``Animal`` (the abstraction) is inherited by ``Cat`` and ``Dog`` (the details). ``Animal.speak`` is declared,
+but not implemented. The two subclasses implement the ``speak`` method, each in their own way.
+
+This relationship of classes is often drawn like this:
+
+{% include content_illustration.html image="di-techniques/animal-cat-dog.png" alt="Diagram of Cat and Dog subclassing Animal" %}
+
+Because the details implement a shared interface, we can interact with either class without knowing which one it is:
+
+{% highlight python %}
+def make_animal_speak(animal):
+    animal.speak()
+
+    
+make_animal_speak(Cat())
+make_animal_speak(Dog())
+{% endhighlight %}
+
+The ``make_animal_speak`` function need not know anything about cats or dogs; all it has to know is that
+it's an animal, and so it understands how to interact with it. (Interacting with objects without knowing
+their specific type, only their interface, is known as *polymorphism*.)
+
+Of course, in Python we don't actually *need* the base class:
+
+{% highlight python %}
+class Cat:
+    def speak(self):
+        print("Meow.")
+
+
+class Dog:
+    def speak(self):
+        print("Woof.")
+{% endhighlight %}
+
+Even if ``Cat`` and ``Dog`` don't inherit ``Animal``, they can still be passed to ``make_animal_speak`` and things
+will work just fine. (This informal ability to interact with an object without it explicitly declaring an interface
+is known as *duck typing*.)
+
+We aren't limited to classes. You can use functions:
+
+{% highlight python %}
+def notify_by_email(customer, event):
+    ...
+
+def notify_by_text_message(customer, event):
+    ...
+    
+for notify in (notify_by_email, notify_by_text_message):
+    notify(customer, event)
+{% endhighlight %}
+
+You can even use Python modules:
+
+{% highlight python %}
+import email
+import text_message
+
+for notification_method in (email, text_message):
+    notification_method.notify(customer, event)
+{% endhighlight %}
+
+However the shared interface is manifested - be it in a formal, object oriented manner, or more implicitly, we can
+generalise the separation between the interface and the implementation as follows:
+
+{% include content_illustration.html image="di-techniques/interface-implementation.png" alt="Diagram of implementation inheriting abstract interface" %}
+
+## Hoisting the implementation
+
+Separating the interface from the implementation will allow you to apply the Dependency Inversion Principle. Take the
+following two packages. ``A`` depends on ``B``, but we don't want it to.
+
+{% include content_illustration.html image="di-techniques/A-B.png" alt="A pointing to B" %}
+
+Our first step is to identify the interface that ``B`` presents to ``A``. This, we leave in place as a dependency of ``A``.
+However, we move ``B``'s implementation of that interface up, so ``A`` no longer depends on it. Finally, we need some
+orchestration code that knows about ``A`` and ``B``, and does the final linking of them together.
+
+This can be drawn like this:
+
+{% include content_illustration.html image="di-techniques/di-pattern.png" alt="main pointing to A and B, A pointing to <<B>>, B pointing (open arrow) to <<B>>" %}
+
+If this feels somewhat abstract, fear not! The techniques below will show you how to do it with real code.
+
+## Technique One: Dependency Injection
+
+Dependency Injection is where a piece of code allows the calling code to control its dependencies.
+The simplest way to implement this is as a function argument.
+
+Take the following function:
 
 {% highlight python %}
 # hello_world.py
@@ -78,10 +159,10 @@ if __name__ == "__main__":
 ``hello_world`` has one dependency that is of interest to us: the built in function ``print``. We can draw a diagram
 of these dependencies like this:
 
-(Diagram of main -> hello world depending on print.)
+{% include content_illustration.html image="di-techniques/main-hw-print.png" alt="Main pointing to hello_world pointing to print" %}
 
 We'll be breaking the dependency of ``hello_world`` on ``print``, making it possible to swap in an
-alternative function, ``print_twice``:
+alternative function, ``print_twice``, which shares the same interface.
 
 {% highlight python %}
 # print_twice.py
@@ -91,13 +172,8 @@ def print_twice(text):
     print(text)
 {% endhighlight %}
 
-## Technique One: Dependency Injection
-
-Dependency Injection is where a piece of code allows the calling code to control its dependencies.
-The simplest way to implement this is as a function argument.
-
-This is trivial to achieve this in our example system: we adjust the ``hello_world`` function so it receives the
-output function as an argument: 
+Let's adjust ``hello_world`` so it supports dependency injection. All we do is allow it to receive the
+output function as an argument:
 
 {% highlight python %}
 # hello_world.py
@@ -133,7 +209,7 @@ In this example, we're injecting a callable, but other implementations could exp
 
 With very little code, we have moved the dependency out of ``hello_world``, into the top level function:
 
-(Diagram of main -> hello_world, main -> print)
+{% include content_illustration.html image="di-techniques/main-hw-print-output.png" alt="Main pointing to hello_world and print, hello_world pointing to <<output>>, print pointing (open arrow) to <<output>>." %}
 
 ## Technique Two: Registry
 
@@ -176,7 +252,7 @@ if __name__ == "__main__":
 
 As with dependency injection, the dependency has been shifted to the outskirts of the system.
 
-(Same graph as above)
+{% include content_illustration.html image="di-techniques/configuration-registry.png" alt="Configuration registry" %}
 
 In a real world system, we might want a slightly more sophisticated config system
 (making it immutable for example, is a good idea). But at heart, any key-value store
@@ -223,7 +299,8 @@ hello_people.people.append("Martha")
 
 A diagram of this system would be:
  
-(Pic of john and martha both pointing to hello people)
+{% include content_illustration.html image="di-techniques/subscriber-registry.png" alt="Subscriber registry" %}
+
 
 #### Subscribing to events
 
