@@ -1,6 +1,6 @@
 ---
 layout: post
-title: What is dependency inversion and why does it matter?
+title: What is Dependency Inversion and Why Does it Matter?
 description: >
     Dependency inversion is a powerful tactic for improving the modularity of software. Without it,
     systems will naturally become tangled and difficult to understand.
