@@ -1,31 +1,31 @@
 ---
 layout: post
-title: Techniques for Dependency Inversion in Python
+title: Three Techniques for Inverting Control, in Python
 description: >
     In <a href="/2019/04/15/why-dependency-inversion/">my previous post</a> we learned how
-    Dependency Inversion can help modularise code. But how do we do this in practice?
+    Inversion of Control can help modularise code. But how do we do this in practice?
 image: di-techniques.jpg
 featured: true
 weight: 1
-tags: [python, architecture, factoring, dependency-inversion]
+tags: [python, architecture, factoring, inversion-of-control]
 ---
 
-Dependency Inversion sounds complicated, but it can be achieved in Python with very little code. In this post, we'll
-examine three different techniques:
+Inversion of Control sounds complicated, but it can be achieved in Python with very little code. In this post, we'll
+examine three different techniques for doing this:
 
 1. *Dependency Injection.*
 2. *Registry*, which comes in two forms: *Configuration Registry* and *Subscriber Registry*.
 3. *Monkey Patching.*
 
 {% include tips/open.html %}    
-  <p>If you haven't read <a href="{% link _posts/2019-04-15-why-dependency-inversion.md %}">my previous post on dependency inversion</a>,
+  <p>If you haven't read <a href="{% link _posts/2019-04-15-why-dependency-inversion.md %}">my previous post on inversion of control</a>,
   you might want to first.</p>
 {% include tips/close.html %}
 
 ## The Dependency Inversion Principle
 
 The first two techniques that we'll learn about follow an important software design principle known as
-**[The Dependency Inversion Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle)** (DIP), which states
+**[The Inversion of control Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle)** (DIP), which states
 that "details should depend upon abstractions". What does this mean?
 
 ### Details and abstractions
@@ -128,7 +128,7 @@ This separation will give us a lot of power, as we'll see now.
 
 ## Hoisting the implementation
 
-Separating the interface from the implementation will allow you to apply the Dependency Inversion Principle. Take the
+Separating the interface from the implementation will allow you to apply the Inversion of control Principle. Take the
 following two packages. ``A`` depends on ``B``, but we don't want it to.
 
 {% include content_illustration.html image="di-techniques/A-B.png" alt="A pointing to B" %}
@@ -141,7 +141,7 @@ This can be drawn like this:
 
 {% include content_illustration.html image="di-techniques/di-pattern.png" alt="main pointing to A and B, A pointing to <<B>>, B pointing (open arrow) to <<B>>" %}
 
-This is the basic shape of dependency inversion, and it's very useful. If this feels somewhat abstract, fear not!
+This is the basic shape of inversion of control, and it's very useful. If this feels somewhat abstract, fear not!
 Let's see how to build this shape with some real code...
 
 ## Technique One: Dependency Injection
@@ -370,7 +370,7 @@ to tell you that it is being manipulated elsewhere.
 Monkey patching should be reserved for desperate times, where you don't have the ability to change the code you're
 patching, and it's really, truly impractical to do anything else.
 
-Instead of monkey patching, it's much better to use one of the other dependency inversion techniques.
+Instead of monkey patching, it's much better to use one of the other inversion of control techniques.
 These expose an API that formally provides the hooks that other code can use to change behaviour, which is easier
 to reason about and predict.
 

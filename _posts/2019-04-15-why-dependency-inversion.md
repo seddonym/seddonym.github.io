@@ -1,38 +1,33 @@
 ---
 layout: post
-title: What is Dependency Inversion and Why Does it Matter?
+title: What is Inversion of Control and Why Does it Matter?
 description: >
-    Dependency inversion is a powerful tactic for improving the modularity of software. Without it,
-    systems will naturally become tangled and difficult to understand.
+    Inversion of Control is a principle for improving the modularity of software. It's a powerful strategy 
+    for simplifying systems that might otherwise become tangled and difficult to understand.
 image: upside-down.jpg
 featured: true
 weight: 2
-tags: [architecture, factoring, dependency-inversion]
+tags: [architecture, factoring, inversion-of-control]
 ---
 
-A simple example of dependency inversion: let's say there is a function that is declared in a part of a system named **A**. If some code in **B**
-(another part of the system) calls that function, we say that **B** depends on **A**. We can draw this as an arrow
-from **B** to **A**: the arrow points to the thing that is being depended on.
+When I first learned to program, the code I wrote all followed a particular pattern: I wrote instructions to the computer
+that it would execute, one by one. If I wanted to make use of utilities written elsewhere, such as in a third party library,
+I would call those utilities directly from my code. Code like this could be described as employing the 'traditional flow of control'.
+Perhaps it's just my bias, but this still seems to me to be the obvious way to program.
 
-{% include content_illustration.html image="why-di/b_to_a.png" alt="An arrow pointing from B to A" %}
+Despite this, there is a wider context that the majority of the code I write today runs in; a context where *control is being inverted*.
+This is because I'm usually using some kind of framework, which is passing control to my code, despite having no direct dependency on it.
+Rather than my code calling the more generic code, the framework allows me to plug in custom behaviour.
+Systems designed like this are using what is known as *Inversion of Control* (IoC for short).
 
-If, through refactoring, we reverse the direction of this arrow so that **A** depends on **B** instead, then we can say
-that we have 'inverted the dependency'.
+This situation can be depicted like so: the generic framework providing points where the custom code can insert its behaviour.
 
-{% include content_illustration.html image="why-di/a_to_b.png" alt="An arrow pointing from A to B" %}
+{% include content_illustration.html image="why-di/framework-plugins.png" alt="Framework with custom behaviours plugged in" %}
 
-This, in its simplest form, is dependency inversion: reversing the direction of a dependency between two different parts
-of a software system. It's one of the most useful tools in a programmer's belt, but
-we often neglect it. To those unfamiliar with the idea, it may seem a bizarre or even impossible thing to do. But for
-most systems, it's crucial if we want avoid our code getting into a mess.
-
-{% include tips/open.html %}    
-  <p>My definition of dependency inversion is a bit looser than the kind described by the
-  well known design principle the
-  <a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">Dependency Inversion Principle</a>,
-  which is more prescriptive about the directions of dependencies. I'll write more about the DIP in a future
-  blog post.</p>
-{% include tips/close.html %}
+Even though many of us are familiar with coding in the context of such a framework, we tend to be reticent to apply the
+same ideas in the software that we design. Indeed, it may seem a bizarre or even impossible thing to do.
+But IoC need not be limited to frameworks --- on the contrary, it is a particularly useful tool in a programmer's belt. 
+For more complex systems, it's one of the best ways to avoid our code getting into a mess. Let me tell you why.
 
 # Striving for modularity
 
@@ -62,8 +57,8 @@ This separation can take different forms. We might organize things by feature ar
 (the user interface, the business logic, the database), or both.
 
 When we do this, we tend to be aiming at modularity. Except for some reason, the system remains complicated.
-In practice, working on one module turns out to relate to another part of the system,
-which relates to another, which relates back to the original one. Soon our heads hurt and we need to have
+In practice, working on one module needs to ask questions of another part of the system,
+which calls another, which calls back to the original one. Soon our heads hurt and we need to have
 a lie down. What's going wrong?
 
 ## Separation of concerns is not enough
@@ -71,15 +66,14 @@ a lie down. What's going wrong?
 The sad fact is, if the only organizing factor of code is separation of concerns, a system will not be
 modular after all. Instead, separate parts will tangle together.
 
-Pretty quickly, our efforts to organise what goes into each module are undermined by the relationships between those
-modules.
+Pretty quickly, our efforts to organise what goes into each module are undermined by the *relationships between those
+modules*.
 
 This is naturally what happens to software if you don't think about relationships. This is because in the real world
 things *are* a messy, interconnected web. As we build functionality, we realise that one module needs to know about
 another. Later on, that other module needs to know about the first. Soon, everything knows about everything else.
 
 {% include content_illustration.html image="why-di/complicated-modular.png" alt="A complicated system with lots of arrows between the modules" %}
-
 
 The problem with software like this is that, because of the web of relationships, it is not a collection of smaller
 subsystems. Instead, it is a single, large system - and large systems tend to be more complicated than smaller ones.
@@ -95,31 +89,19 @@ In this diagram we see that **A** depends on **B**, but **B** also depends upon 
 circular dependency. As a result, these two modules are in fact no less complicated than a single module.
 How can we improve things?
 
-## Extracting a shared dependency
+## Removing cycles by inverting control
 
-Often, removing the cycle is a simple case of extracting a shared dependency into its own module. Take these two
-modules:
+There are a few ways to tackle a circular dependency. You may be able to extract a shared dependency into a separate
+module, that the other two modules depend on. You may be able to create an extra module that coordinates the two modules,
+instead of them calling each other. Or you can use inversion of control.
 
-{% include content_illustration.html image="why-di/b-with-inner.png" alt="B with an inner component B&prime;, which both A and the rest of B depend on" %}
+At the moment, each module calls each other. We can pick one of the calls (let's say **A**'s call to **B**) and invert
+control so that ``A`` no longer needs to know anything about ``B``. Instead, it exposes a way of plugging into its
+behaviour, that ``B`` can then exploit. This can be diagrammed like so:
 
-In this case, the cause of the circular dependency is a submodule within **B**, which we'll call **B&prime;**, that
-both **A** and the rest of **B** depend on. The cycle is easily eliminated by pulling **B&prime;** into its
-own module.
+{% include content_illustration.html image="why-di/plugin.png" alt="B plugging into A" %}
 
-{% include content_illustration.html image="why-di/inner-extracted.png" alt="A with arrows pointing to B and B&prime;, and B also pointing to B&prime;" %}
-
-This refactoring is usually a simple matter of moving some code from one file to another. This isn't dependency inversion,
-but it's an option you should consider first, if it's possible.
-
-## When you can't extract a shared dependency, use inversion instead 
-
-When the relationship between two modules is fundamentally cyclical, it's time for a spot of dependency inversion.
-If we reverse one of the arrows, then we eliminate the circular dependency and limit the flow of dependencies to a
-single direction:
-
-{% include content_illustration.html image="why-di/a_b_acyclic.png" alt="Two arrows, both pointing from B to A" %}
-
-Now that **A** has no knowledge of **B**, we think about **A** in isolation. We've just reduced our mental overhead,
+Now that **A** has no specific knowledge of **B**, we think about **A** in isolation. We've just reduced our mental overhead,
 and made the system more modular.
 
 The tactic remains useful for larger groups of modules. For example, three modules may depend upon each other, in
@@ -129,19 +111,19 @@ a cycle:
 
 In this case, we can invert one of the dependencies, gaining us a single direction of flow:
 
-{% include content_illustration.html image="why-di/abc_acyclic.png" alt="Arrows pointing from A to B, A to C and B to C" %}
+{% include content_illustration.html image="why-di/plugin-3.png" alt="B plugging into A" %}
 
-Again, dependency inversion has come to the rescue.
+Again, inversion of control has come to the rescue.
 
-# Dependency inversion in practice
+# Inversion of control in practice
 
-In practice, inverting a dependency can sometimes feel impossible. Surely there is no way to reverse the direction of
-the arrow merely by refactoring? But I have good news. As far as I know, it is never impossible.
+In practice, inverting control can sometimes feel impossible. Surely, if a module needs to call another, there is way
+to reverse this merely by refactoring? But I have good news. As far as I know, it is never impossible.
 You should *always* be able to avoid circular dependencies through some form of inversion. It's not always the most obvious way
 to write code, but it can make your code base significantly easier to work with.
 
-There are several different techniques for *how* you reverse that arrow. One such technique that is often
- talked about is dependency injection. I will cover some of these techniques in part two of this series.
+There are several different techniques for *how* you do this. One such technique that is often
+ talked about is dependency injection. I will cover some of these techniques in [part two of this series]({% link _posts/2019-07-01-ioc-techniques.md %}).
 
 There is also more to be said about how to apply this approach across the wider code base: if the system consists of
 more than a handful of files, where do we start? Again, I'll cover this later in the series.
@@ -149,9 +131,8 @@ more than a handful of files, where do we start? Again, I'll cover this later in
 # Conclusion: complex is better than complicated
 
 If you want to avoid your code getting into a mess, it's not enough merely to separate concerns. You must control the
-relationships between those concerns. In order to gain the benefits of a more modular system,
-you will sometimes need to use dependency inversion to make your dependencies flow in the opposite direction to what
-comes naturally.
+*relationships* between those concerns. In order to gain the benefits of a more modular system, you will sometimes need
+to use inversion of control to make control flow in the opposite direction to what comes naturally.
 
 The [Zen of Python](https://en.wikipedia.org/wiki/Zen_of_Python) states:
 
@@ -161,6 +142,6 @@ But also that
 
     Complex is better than complicated.
 
-I think of dependency inversion as an example of choosing the complex over the complicated. If we don't use it when
+I think of inversion of control as an example of choosing the complex over the complicated. If we don't use it when
 it's needed, our efforts to create a simple system will tangle into complications. Inverting dependencies allows us,
 at the cost of a small amount of complexity, to make our systems less complicated.
