@@ -2,33 +2,39 @@
 layout: post
 title: Three Techniques for Inverting Control, in Python
 description: >
-    In <a href="/2019/04/15/why-dependency-inversion/">my previous post</a> we learned how
-    Inversion of Control can help modularise code. But how do we do this in practice?
+    Inversion of Control, in which code delegates control using plugins, is a powerful way of
+    modularising software. It may sound complicated, but it can be achieved in Python with very little work.
+    Let's examine three different techniques for doing this.
 image: di-techniques.jpg
 featured: true
 weight: 1
-tags: [python, architecture, factoring, inversion-of-control]
+tags: [python, architecture, factoring, inversion-of-control, dependency-injection]
 ---
 
-Inversion of Control sounds complicated, but it can be achieved in Python with very little code. In this post, we'll
-examine three different techniques for doing this:
+In <a href="/2019/04/15/inversion-of-control/">my previous post</a> we learned how Inversion of Control can
+be visualised as follows:
 
-1. *Dependency Injection.*
-2. *Registry*, which comes in two forms: *Configuration Registry* and *Subscriber Registry*.
-3. *Monkey Patching.*
+{% include content_illustration.html image="ioc-techniques/a-b-plugin.png" alt="B plugging into A" %}
 
-{% include tips/open.html %}    
-  <p>If you haven't read <a href="{% link _posts/2019-04-15-why-dependency-inversion.md %}">my previous post on inversion of control</a>,
-  you might want to first.</p>
-{% include tips/close.html %}
+``B`` plugs into ``A``.  ``A`` provides a mechanism for ``B`` to do this --- but otherwise ``A`` need know nothing about ``B``.
+ 
+The diagram provides a high level view of the mechanism, but how is this actually implemented?
 
-## The Dependency Inversion Principle
+## A pattern for inverting control
 
-The first two techniques that we'll learn about follow an important software design principle known as
-**[The Inversion of control Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle)** (DIP), which states
-that "details should depend upon abstractions". What does this mean?
+Getting a little closer to the code structure, we can use this powerful pattern:
 
-### Details and abstractions
+{% include content_illustration.html image="ioc-techniques/di-pattern.png" alt="main pointing to A and B, A pointing to <<B>>, B pointing (open arrow) to <<B>>" %}
+
+This is the basic shape of inversion of control. Each arrow points in the direction of a dependency - so ``main`` depends
+on ``A``, but not the other way around. Notice also the box at the bottom: the angle brackets around ``B`` indicate that
+it is an *abstraction* rather than an *implementation*. Finally, the open arrow pointing from ``B`` to ``<<B>>`` indicates
+that ``B`` *implements* ``<<B>>``. We can also say that ``<<B>>`` defines an *interface* which is implemented by ``B``.
+
+These concepts of abstraction, implementation and interface are all important to understanding the techniques we'll be
+employing. Let's make sure we understand what they mean when applied to Python.
+
+### Abstractions, implementations and interfaces --- in Python
 
 Consider three Python classes:
 
@@ -49,19 +55,22 @@ class Dog(Animal):
 {% endhighlight %}
 
 
-In this example, ``Animal`` is an abstraction: it declares its ``speak`` method, but does not implement it.
+In this example, ``Animal`` is an *abstraction*: it declares its ``speak`` method, but its not intended to be run (as
+is signalled by the ``NotImplementedError``).
 
-``Cat`` and ``Dog``, however, are the 'details' referred to in the DIP.  They both *implement* the ``speak`` method,
-each in their own way.
+``Cat`` and ``Dog``, however, are *implementations*: they both implement the ``speak`` method, each in their own way.
 
-This relationship of classes is often drawn like this, with an open arrow indicating that Cat and Dog are concrete
-implementations of Animal.
+The ``speak`` method can be thought of as an *interface*: a common way in which other code may interact with
+these classes.
 
-{% include content_illustration.html image="di-techniques/animal-cat-dog.png" alt="Diagram of Cat and Dog subclassing Animal" %}
+This relationship of classes is often drawn like this, with an open arrow indicating that ``Cat`` and ``Dog`` are concrete
+implementations of ``Animal``.
+
+{% include content_illustration.html image="ioc-techniques/animal-cat-dog.png" alt="Diagram of Cat and Dog subclassing Animal" %}
 
 #### Polymorphism and duck typing
 
-Because the details implement a shared interface, we can interact with either class without knowing which one it is:
+Because ``Cat`` and ``Dog`` implement a shared interface, we can interact with either class without knowing which one it is:
 
 {% highlight python %}
 def make_animal_speak(animal):
@@ -122,27 +131,26 @@ for notification_method in (email, text_message):
 Whether a shared interface is manifested in a formal, object oriented manner, or more implicitly, we can
 generalise the separation between the interface and the implementation like so:
 
-{% include content_illustration.html image="di-techniques/interface-implementation.png" alt="Diagram of implementation inheriting abstract interface" %}
+{% include content_illustration.html image="ioc-techniques/interface-implementation.png" alt="Diagram of implementation inheriting abstract interface" %}
 
 This separation will give us a lot of power, as we'll see now.
 
-## Hoisting the implementation
+## A second look at the pattern
 
-Separating the interface from the implementation will allow you to apply the Inversion of control Principle. Take the
-following two packages. ``A`` depends on ``B``, but we don't want it to.
+Let's look again at the Inversion of Control pattern.
 
-{% include content_illustration.html image="di-techniques/A-B.png" alt="A pointing to B" %}
+{% include content_illustration.html image="ioc-techniques/di-pattern.png" alt="main pointing to A and B, A pointing to <<B>>, B pointing (open arrow) to <<B>>" %}
 
-Our first step is to identify the interface that ``B`` presents to ``A``. This, we leave in place as a dependency of ``A``.
-However, we move ``B``'s implementation of that interface up, so ``A`` no longer depends on it. Finally, we need some
-orchestration code that knows about ``A`` and ``B``, and does the final linking of them together.
+In order to invert control between ``A`` and ``B``, we've added two things to our design.
 
-This can be drawn like this:
+The first is ``<<B>>``. We've separated out into its abstraction (which ``A`` will continue to depend on and know about),
+from its implementation (of which ``A`` is blissfully ignorant). 
 
-{% include content_illustration.html image="di-techniques/di-pattern.png" alt="main pointing to A and B, A pointing to <<B>>, B pointing (open arrow) to <<B>>" %}
+However, somehow the software will need to make sure that ``B`` is used in place of its abstraction. We therefore need
+some orchestration code that knows about both ``A`` and ``B``, and does the final linking of them together. I've called
+this ``main``.
 
-This is the basic shape of inversion of control, and it's very useful. If this feels somewhat abstract, fear not!
-Let's see how to build this shape with some real code...
+It's now time to look at the techniques we may use for doing this.
 
 ## Technique One: Dependency Injection
 
@@ -172,9 +180,12 @@ if __name__ == "__main__":
 ``hello_world`` has one dependency that is of interest to us: the built in function ``print``. We can draw a diagram
 of these dependencies like this:
 
-{% include content_illustration.html image="di-techniques/main-hw-print.png" alt="Main pointing to hello_world pointing to print" %}
+{% include content_illustration.html image="ioc-techniques/main-hw-print.png" alt="Main pointing to hello_world pointing to print" %}
 
-So, let's adjust ``hello_world`` so it supports dependency injection. Drum roll please...
+The first step is to decide what is the abstraction that  ``print`` implements. We could think of this simply as a
+function that outputs a message it is supplied --- let's call it ``output_function``. 
+
+Now, we adjust ``hello_world`` so it supports the injection of the implementation of ``output_function``.  Drum roll please...
 
 {% highlight python %}
 # hello_world.py
@@ -183,7 +194,7 @@ def hello_world(output_function):
     output_function("Hello, world.")
 {% endhighlight %}
 
-All we do is allow it to receive the output function as an argument. The top level code then passes in the ``print`` function via the argument:
+All we do is allow it to receive the output function as an argument. The orchestration code then passes in the ``print`` function via the argument:
 
 {% highlight python %}
 # main.py
@@ -200,9 +211,9 @@ implementations could expect a class, an instance or even a module.
 
 With very little code, we have moved the dependency out of ``hello_world``, into the top level function:
 
-{% include content_illustration.html image="di-techniques/main-hw-print-output.png" alt="Main pointing to hello_world and print, hello_world pointing to <<output>>, print pointing (open arrow) to <<output>>." %}
+{% include content_illustration.html image="ioc-techniques/main-hw-print-output.png" alt="Main pointing to hello_world and print, hello_world pointing to <<output>>, print pointing (open arrow) to <<output>>." %}
 
-Notice that although there isn't a formally declared abstract output function, that concept is implicitly there, so
+Notice that although there isn't a formally declared abstract ``output_function``, that concept is implicitly there, so
 I've included it in the diagram.
 
 ## Technique Two: Registry
@@ -238,7 +249,9 @@ To complete the picture, here's how it could be configured externally:
 
 import hello_world
 
+
 hello_world.config["OUTPUT_FUNCTION"] = print
+
 
 if __name__ == "__main__":
     hello_world.hello_world()
@@ -251,7 +264,7 @@ any key-value store will do.
 
 As with dependency injection, the output function's implementation has been lifted out, so ``hello_world`` no longer depends on it. 
 
-{% include content_illustration.html image="di-techniques/configuration-registry.png" alt="Configuration registry" %}
+{% include content_illustration.html image="ioc-techniques/configuration-registry.png" alt="Configuration registry" %}
 
 ### The Subscriber Registry
 
@@ -268,6 +281,7 @@ able to add people to the list of those we should greet.
 
 people = []
 
+
 def hello_people():
     for person in people:
         print(f"Hello, {person}.")
@@ -277,12 +291,14 @@ def hello_people():
 
 import hello_people
 
+
 hello_people.people.append("John")
 {% endhighlight %}
 {% highlight python %}
 # martha.py
 
 import hello_people
+
 
 hello_people.people.append("Martha")
 {% endhighlight %}
@@ -294,9 +310,9 @@ the code works through each item one by one.
  
 A diagram of this system would be:
  
-{% include content_illustration.html image="di-techniques/subscriber-registry.png" alt="Subscriber registry" %}
+{% include content_illustration.html image="ioc-techniques/subscriber-registry.png" alt="Subscriber registry" %}
 
-Notice that in this case, *main* doesn't need to know about the registry --- instead, it's the subscribers elsewhere
+Notice that in this case, ``main`` doesn't need to know about the registry --- instead, it's the subscribers elsewhere
 in the system that write to it.
 
 #### Subscribing to events
@@ -334,8 +350,8 @@ hello_world.subscribers.append(write_to_log)
 
 ## Technique Three: Monkey Patching
 
-Our final technique is *Monkey Patching*: dynamically manipulating code from outside. This is usually unwise,
-but I'm including it for completeness.
+Our final technique, *Monkey Patching*, is very different to the others, as it doesn't use the Inversion of Control pattern described above.
+It's also usually unwise, but I'm including it for completeness. 
 
 If our ``hello_world`` function doesn't implement any hooks for injecting its output function, we *could* monkey patch the
 built in ``print`` function with something different:
@@ -410,7 +426,7 @@ which are a pub/sub mechanism, use this pattern. The Django [admin site](https:/
 also uses a subscriber registry to allow different database tables to be registered with it, exposing a CRUD interface in the UI.
 
 Configuration registries *may* be used in place of subscriber registries for configuring,
-say, a list - if you prefer linking things up in a configuration file, rather than scattered throughout the application.
+say, a list --- if you prefer doing your linking up in single place, rather than scattering it throughout the application.
 
 ## Conclusion
 

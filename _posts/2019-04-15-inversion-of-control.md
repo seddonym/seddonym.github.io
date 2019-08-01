@@ -8,6 +8,7 @@ image: upside-down.jpg
 featured: true
 weight: 2
 tags: [architecture, factoring, inversion-of-control]
+redirect_from: "/2019/04/15/why-dependency-inversion/"
 ---
 
 When I first learned to program, the code I wrote all followed a particular pattern: I wrote instructions to the computer
@@ -85,7 +86,7 @@ upon one other. Let's take two modules as an example:
 
 {% include content_illustration.html image="why-di/a-b-cycle.png" alt="Arrows pointing in both directions between A and B" %}
 
-In this diagram we see that **A** depends on **B**, but **B** also depends upon **A**. It's a
+In this diagram we see that ``A`` depends on ``B``, but ``B`` also depends upon ``A``. It's a
 circular dependency. As a result, these two modules are in fact no less complicated than a single module.
 How can we improve things?
 
@@ -95,13 +96,13 @@ There are a few ways to tackle a circular dependency. You may be able to extract
 module, that the other two modules depend on. You may be able to create an extra module that coordinates the two modules,
 instead of them calling each other. Or you can use inversion of control.
 
-At the moment, each module calls each other. We can pick one of the calls (let's say **A**'s call to **B**) and invert
+At the moment, each module calls each other. We can pick one of the calls (let's say ``A``'s call to ``B``) and invert
 control so that ``A`` no longer needs to know anything about ``B``. Instead, it exposes a way of plugging into its
 behaviour, that ``B`` can then exploit. This can be diagrammed like so:
 
 {% include content_illustration.html image="why-di/plugin.png" alt="B plugging into A" %}
 
-Now that **A** has no specific knowledge of **B**, we think about **A** in isolation. We've just reduced our mental overhead,
+Now that ``A`` has no specific knowledge of ``B``, we think about ``A`` in isolation. We've just reduced our mental overhead,
 and made the system more modular.
 
 The tactic remains useful for larger groups of modules. For example, three modules may depend upon each other, in
@@ -118,9 +119,9 @@ Again, inversion of control has come to the rescue.
 # Inversion of control in practice
 
 In practice, inverting control can sometimes feel impossible. Surely, if a module needs to call another, there is way
-to reverse this merely by refactoring? But I have good news. As far as I know, it is never impossible.
-You should *always* be able to avoid circular dependencies through some form of inversion. It's not always the most obvious way
-to write code, but it can make your code base significantly easier to work with.
+to reverse this merely by refactoring? But I have good news. You should *always* be able to avoid circular dependencies
+through some form of inversion (if you think you've found an example where it isn't, please tell me).
+It's not always the most obvious way to write code, but it can make your code base significantly easier to work with.
 
 There are several different techniques for *how* you do this. One such technique that is often
  talked about is dependency injection. I will cover some of these techniques in [part two of this series]({% link _posts/2019-07-01-ioc-techniques.md %}).
@@ -145,3 +146,10 @@ But also that
 I think of inversion of control as an example of choosing the complex over the complicated. If we don't use it when
 it's needed, our efforts to create a simple system will tangle into complications. Inverting dependencies allows us,
 at the cost of a small amount of complexity, to make our systems less complicated.
+
+# Further information
+
+- Part two of this series: [Three Techniques for Inverting Control, in Python]({% link _posts/2019-07-01-ioc-techniques.md %}).
+
+
+

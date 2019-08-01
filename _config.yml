@@ -32,6 +32,7 @@ image_path: '/assets/img/'
 plugins:
   - jekyll-feed
   - jekyll-gist
+  - jekyll-redirect-from
 
 markdown: kramdown
 highlighter: rouge
