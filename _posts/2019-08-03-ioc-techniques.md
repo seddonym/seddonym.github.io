@@ -26,13 +26,10 @@ Getting a little closer to the code structure, we can use this powerful pattern:
 
 {% include content_illustration.html image="ioc-techniques/di-pattern.png" alt="main pointing to A and B, A pointing to <<B>>, B pointing (open arrow) to <<B>>" %}
 
-This is the basic shape of inversion of control. Each arrow points in the direction of a dependency - so ``main`` depends
-on ``A``, but not the other way around. Notice also the box at the bottom: the angle brackets around ``B`` indicate that
-it is an *abstraction* rather than an *implementation*. Finally, the open arrow pointing from ``B`` to ``<<B>>`` indicates
-that ``B`` *implements* ``<<B>>``. We can also say that ``<<B>>`` defines an *interface* which is implemented by ``B``.
-
-These concepts of abstraction, implementation and interface are all important to understanding the techniques we'll be
-employing. Let's make sure we understand what they mean when applied to Python.
+This is the basic shape of inversion of control. Captured within the notation, which may or may not be familiar
+to you, are the concepts of *abstraction*, *implementation* and *interface*. These concepts are all important
+to understanding the techniques we'll be employing. Let's make sure we understand what they mean when applied
+to Python.
 
 ### Abstractions, implementations and interfaces --- in Python
 
