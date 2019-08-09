@@ -121,7 +121,7 @@ Again, inversion of control has come to the rescue.
 
 # Inversion of control in practice
 
-In practice, inverting control can sometimes feel impossible. Surely, if a module needs to call another, there is way
+In practice, inverting control can sometimes feel impossible. Surely, if a module needs to call another, there is no way
 to reverse this merely by refactoring? But I have good news. You should *always* be able to avoid circular dependencies
 through some form of inversion (if you think you've found an example where it isn't, please tell me).
 It's not always the most obvious way to write code, but it can make your code base significantly easier to work with.
