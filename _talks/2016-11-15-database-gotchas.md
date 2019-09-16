@@ -3,7 +3,6 @@ layout: talk
 title: Database Gotchas - Two Key Concepts You Can't Afford to Ignore
 location: London Django Meetup
 tags: [django]
-featured: true
 weight: 2
 image: database-gotchas.jpg
 description: An in-depth look at database atomicity and concurrency in Django.
