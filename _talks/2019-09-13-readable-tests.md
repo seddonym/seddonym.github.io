@@ -8,7 +8,7 @@ image: readable-tests.png
 description:
   So often, our tests are much harder to understand than the rest of our code. This is a shame! Find out how to
   write tests that act as living documentation from which you can gain deeper understanding of your system.
-youtube_embed_url: https://youtu.be/b9HNZ2z_XPc
+youtube_embed_url: https://www.youtube.com/embed/b9HNZ2z_XPc
 slides_link: https://bit.ly/readable-tests
 ---
 Have you ever found yourself scratching your head when reading an automated test? Even if we take pride in our
