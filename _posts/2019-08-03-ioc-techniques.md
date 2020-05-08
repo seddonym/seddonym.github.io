@@ -6,7 +6,7 @@ description: >
     modularising software. It may sound complicated, but it can be achieved in Python with very little work.
     Let's examine three different techniques for doing this.
 image: ioc-techniques.jpg
-featured: true
+featured: false
 weight: 1
 tags: [python, architecture, factoring, inversion-of-control, dependency-injection]
 ---
@@ -17,7 +17,7 @@ be visualised as follows:
 {% include content_illustration.html image="ioc-techniques/a-b-plugin.png" alt="B plugging into A" %}
 
 ``B`` plugs into ``A``.  ``A`` provides a mechanism for ``B`` to do this --- but otherwise ``A`` need know nothing about ``B``.
- 
+
 The diagram provides a high level view of the mechanism, but how is this actually implemented?
 
 ## A pattern for inverting control
@@ -73,7 +73,7 @@ Because ``Cat`` and ``Dog`` implement a shared interface, we can interact with e
 def make_animal_speak(animal):
     animal.speak()
 
-    
+
 make_animal_speak(Cat())
 make_animal_speak(Dog())
 {% endhighlight %}
@@ -109,7 +109,7 @@ def notify_by_email(customer, event):
 def notify_by_text_message(customer, event):
     ...
 
-    
+
 for notify in (notify_by_email, notify_by_text_message):
     notify(customer, event)
 {% endhighlight %}
@@ -141,7 +141,7 @@ Let's look again at the Inversion of Control pattern.
 In order to invert control between ``A`` and ``B``, we've added two things to our design.
 
 The first is ``<<B>>``. We've separated out into its abstraction (which ``A`` will continue to depend on and know about),
-from its implementation (of which ``A`` is blissfully ignorant). 
+from its implementation (of which ``A`` is blissfully ignorant).
 
 However, somehow the software will need to make sure that ``B`` is used in place of its abstraction. We therefore need
 some orchestration code that knows about both ``A`` and ``B``, and does the final linking of them together. I've called
@@ -181,7 +181,7 @@ of these dependencies like this:
 {% include content_illustration.html image="ioc-techniques/main-hw-print.png" alt="Main pointing to hello_world pointing to print" %}
 
 The first step is to identify the abstraction that  ``print`` implements. We could think of this simply as a
-function that outputs a message it is supplied --- let's call it ``output_function``. 
+function that outputs a message it is supplied --- let's call it ``output_function``.
 
 Now, we adjust ``hello_world`` so it supports the injection of the implementation of ``output_function``.  Drum roll please...
 
@@ -218,7 +218,7 @@ I've included it in the diagram.
 ## Technique Two: Registry
 
 A *Registry* is a store that one piece of code reads from to decide how to behave, which may be
-written to by other parts of the system. Registries require a bit more machinery that dependency injection. 
+written to by other parts of the system. Registries require a bit more machinery that dependency injection.
 
 They take two forms: *Configuration* and *Subscriber*:
 
@@ -261,7 +261,7 @@ The machinery in this case is simply a dictionary that is written to from outsid
 we might want a slightly more sophisticated config system (making it immutable for example, is a good idea). But at heart,
 any key-value store will do.
 
-As with dependency injection, the output function's implementation has been lifted out, so ``hello_world`` no longer depends on it. 
+As with dependency injection, the output function's implementation has been lifted out, so ``hello_world`` no longer depends on it.
 
 {% include content_illustration.html image="ioc-techniques/configuration-registry.png" alt="Configuration registry" %}
 
@@ -306,9 +306,9 @@ As with the configuration registry, there is a store that can be written to from
 being a dictionary, it's a list. This list is populated, typically
 at startup, by other components scattered throughout the system. When the time is right,
 the code works through each item one by one.
- 
+
 A diagram of this system would be:
- 
+
 {% include content_illustration.html image="ioc-techniques/subscriber-registry.png" alt="Subscriber registry" %}
 
 Notice that in this case, ``main`` doesn't need to know about the registry --- instead, it's the subscribers elsewhere
@@ -321,7 +321,7 @@ that happen one place, without that place directly calling them. This is often s
 a.k.a. pub/sub.
 
 We may implement this in much the same way as above, except instead of adding strings to a list, we add callables:
- 
+
 {% highlight python %}
 # hello_world.py
 
@@ -343,7 +343,7 @@ import hello_world
 def write_to_log():
     ...
 
-   
+
 hello_world.subscribers.append(write_to_log)
 {% endhighlight %}
 
@@ -358,7 +358,7 @@ built in ``print`` function with something different:
 {% highlight python %}
 # main.py
 
-import hello_world 
+import hello_world
 from print_twice import print_twice
 
 
@@ -419,7 +419,7 @@ configuration system in place (e.g. if you're using a framework that has a way o
 there's even less extra machinery to set up. A good example of this is Django's ORM, which provides a Python API around different database engines. The ORM does not depend on any one database engine; instead,
 you [configure your project to use a particular database engine](https://docs.djangoproject.com/en/2.2/ref/settings/#databases)
 via Django's configuration system.  
- 
+
 Use a subscriber registry for pub/sub, or when you depend on an arbitrary number of values. Django [signals](https://docs.djangoproject.com/en/2.2/topics/signals/),
 which are a pub/sub mechanism, use this pattern. A rather different use case, also from Django,
 is its [admin site](https://docs.djangoproject.com/en/2.2/ref/contrib/admin/). This uses a subscriber registry to

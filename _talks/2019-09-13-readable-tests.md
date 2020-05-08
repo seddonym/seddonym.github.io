@@ -2,6 +2,7 @@
 layout: talk
 title: How to write readable tests
 featured: true
+weight: 5
 location: PyCon UK
 tags: [tests, readability]
 image: readable-tests.png
