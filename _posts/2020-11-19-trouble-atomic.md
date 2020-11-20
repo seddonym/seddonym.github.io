@@ -30,8 +30,14 @@ from django.db import transaction
 
 def transfer(source: Account, destination: Account, amount: int) -> None:
     with transaction.atomic():
-        BalanceLine.objects.create(account=source, amount=-amount)
-        BalanceLine.objects.create(account=destination, amount=amount)
+        BalanceLine.objects.create(
+            account=source,
+            amount=-amount,
+        )
+        BalanceLine.objects.create(
+            account=destination,
+            amount=amount,
+        )
 
 {% endhighlight %}
 
@@ -102,7 +108,11 @@ import banking_api
 def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int) -> None:
     with transaction.atomic():
         # Store the movement in our database.
-        balance_line = BalanceLine.objects.create(account=account, amount=-amount, bank_details=bank_details)
+        balance_line = BalanceLine.objects.create(
+            account=account,
+            amount=-amount,
+            bank_details=bank_details,
+        )
         # Log the external transfer, generating a unique reference.
         external_transfer = ExternalTransfer.objects.create(
             account=account,
@@ -110,7 +120,12 @@ def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: 
             bank_details=bank_details,
         )
         # Instruct third party API to move money.
-        banking_api.make_payment(account, bank_details, amount, reference=external_transfer.reference)
+        banking_api.make_payment(
+            account,
+            bank_details,
+            amount,
+            reference=external_transfer.reference,
+        )
 {% endhighlight %}
 
 At first glance, the `transaction.atomic` is well placed: if the call to the third party API fails, we roll back the
@@ -187,8 +202,8 @@ from django.db import transaction
 from django.conf import settings
 
 
-def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int):
-    if not settings.get("DISABLE_DURABILITY_CHECKING") and transaction.get_connection().in_atomic_block:
+def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int) -> None:
+    if not settings.DISABLE_DURABILITY_CHECKING and transaction.get_connection().in_atomic_block:
       raise RuntimeError("Function should not be called within an atomic block.")
 
     with transaction.atomic():
@@ -206,7 +221,7 @@ We use this approach extensively at [my workplace ](https://octopus.energy/), an
 
 {% highlight python %}
 @durable
-def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int):
+def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int) -> None:
     with transaction.atomic():
         # As before.
 {% endhighlight %}
