@@ -2,11 +2,11 @@
 layout: post
 title: What is Inversion of Control and Why Does it Matter?
 description: >
-    Inversion of Control is a principle for improving the modularity of software. It's a powerful strategy 
+    Inversion of Control is a principle for improving the modularity of software. It's a powerful strategy
     for simplifying systems that might otherwise become tangled and difficult to understand.
 image: upside-down.jpg
 featured: true
-weight: 2
+weight: 3
 tags: [architecture, factoring, inversion-of-control]
 redirect_from: "/2019/04/15/why-dependency-inversion/"
 ---
@@ -30,7 +30,7 @@ Even though many of us are familiar with coding in the context of such a framewo
 same ideas in the software that *we* design. Indeed, it may seem a bizarre or even impossible thing to do. It is certainly
 not the 'obvious' way to program.
 
-But IoC need not be limited to frameworks --- on the contrary, it is a particularly useful tool in a programmer's belt. 
+But IoC need not be limited to frameworks --- on the contrary, it is a particularly useful tool in a programmer's belt.
 For more complex systems, it's one of the best ways to avoid our code getting into a mess. Let me tell you why.
 
 # Striving for modularity
@@ -153,6 +153,3 @@ at the cost of a small amount of complexity, to make our systems less complicate
 # Further information
 
 - Part two of this series: [Three Techniques for Inverting Control, in Python]({% link _posts/2019-08-03-ioc-techniques.md %}).
-
-
-

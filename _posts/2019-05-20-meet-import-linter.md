@@ -6,7 +6,7 @@ description: >
     projects written in Python can easily grow into an unmaintainable mess. Keeping a code base maintainable, particularly when it's large and
     complex, is difficult.
 image: depgraph.png
-featured: true
+featured: false
 weight: 2
 tags: [python, architecture]
 ---
@@ -24,7 +24,7 @@ adapted for the newer version of the tool.*)
 
 # What Import Linter does
 
-Import Linter is a tool that helps impose a structure on your Python project, based on its 
+Import Linter is a tool that helps impose a structure on your Python project, based on its
 dependency flows. It analyses which modules are importing which, and checks this conforms to a *contract* defined by you.
 
 Each contracts must be of [a particular type](https://import-linter.readthedocs.io/en/latest/contract_types.html),
@@ -64,7 +64,7 @@ architectural rules.
 # Example: Layer contracts
 
 A powerful contract type is the *layers contract*. This allows you to impose a classic 'Layered Architecture' on
-your project. 
+your project.
 
 In this contract, you describe an ordered list of *layers*. Each layer is just a subpackage or module
 within your codebase. The contract stipulates that any code within a layer lower down the list
@@ -153,6 +153,3 @@ If you have any feedback, or questions about using Import Linter, I'd love to he
 - The Layers pattern in Chapter 2 of <em>Pattern-Oriented Software Architecuture Vol. 1</em> (Buschmann, Meunier, Rohnert, Sommerlad and Stal, 1996).
 - [My talk on layers and the Rocky River pattern]({% link _talks/2017-12-12-rocky-river.md %}).
 - [Encapsulated Django]({% link _talks/2015-11-16-encapsulated-django.md %}).
-
-
-

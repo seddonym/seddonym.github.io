@@ -6,7 +6,7 @@ description: >
     Design is crucial to good software development, but many people lack a process for doing it. In this blog entry, I explain the three step process I use.
 image: model-system-code.png
 featured: true
-weight: 1
+weight: 2
 tags: [design, architecture]
 ---
 
