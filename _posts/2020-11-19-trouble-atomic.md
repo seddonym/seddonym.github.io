@@ -236,11 +236,19 @@ Unlike with `transaction.atomic`, `durable` functions cannot be nested. This mea
 them. In our architecture, we limit its use to certain higher-level functions (called 'use cases') which sit between
 Django views and business logic code.
 
-## Conclusion
+## Robust? I thought you said robust?
 
-We must be careful, when using `transaction.atomic`, not to mistake its atomicity guarantee for a guarantee of
-durability. Doing so can lead to missing data, particularly in code which is subject to intermittent failure (such as
-calls over a network).
+Now our transfer code is much less vulnerable to problems that may be encountered elsewhere in our application. I
+should, however, point out that it still has vulnerabilities. A network timeout when contacting the API, or a database
+outage afterwards, could prevent the transfer being committed despite a payment having been taken. To deal with those
+problems, we'll need to make sure the transfer can be retried idempotently - but that's a subject for future blog post.
 
-Fortunately, durability guarantees are fairly easily achieved with a little custom code. Using this in well-chosen
-places will make your applications more robust.
+So although `@durable` doesn't solve all these problems on its own, it does make it easier to think about code like
+this, as it clarifies the context that code is running in.
+
+In summary, we must be careful, when using `transaction.atomic`, not to mistake its atomicity guarantee for a guarantee
+of durability. Doing so can lead to data being lost due to an exception raised in a completely different part of the
+application. This is of particular concern with code that has external side effects.
+
+Fortunately, durability guarantees are fairly easily achieved with a little custom code. I've found using this in
+well-chosen places makes it easier to design robust Django applications.
