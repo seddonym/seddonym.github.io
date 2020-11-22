@@ -241,7 +241,8 @@ Django views and business logic code.
 Now our transfer code is much less vulnerable to problems that may be encountered elsewhere in our application. I
 should, however, point out that it still has vulnerabilities. A network timeout when contacting the API, or a database
 outage afterwards, could prevent the transfer being committed despite a payment having been taken. To deal with those
-problems, we'll need to make sure the transfer can be retried idempotently - but that's a subject for future blog post.
+problems, we'll need to make sure the transfer can be retried idempotently - but that's a subject for a future
+blog post.
 
 So although `@durable` doesn't solve all these problems on its own, it does make it easier to think about code like
 this, as it clarifies the context that code is running in.
