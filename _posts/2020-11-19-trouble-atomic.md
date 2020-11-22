@@ -165,23 +165,19 @@ Wouldn't it be nice if we could be sure of the behaviour of ``transaction.atomic
 if we could check that there was no transaction in progress, guaranteeing that as we exit that ``atomic`` block,
 the transaction is durably committed?
 
-I have good news. It turns out to be fairly straightforward, providing you're happy to use an API that is
-[described in Django's source code as private](https://github.com/django/django/blob/3.1.3/django/db/transaction.py#L16).
-Assuming our code is running on the default database connection, we can do this:
+I have good news. It turns out to be straightforward: we just check that we're in autocommit mode.
 
 {% highlight python %}
 from django.db import transaction
 
 
 def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int) -> None:
-    if transaction.get_connection().in_atomic_block:
+    if not transaction.get_autocommit():
       raise RuntimeError("Function should not be called within an atomic block.")
 
     with transaction.atomic():
         # As before.
 {% endhighlight %}
-
-(Disclaimer: if your application uses multiple connections, you may need to think a bit more carefully about this.)
 
 This would be enough, if we never wanted to test our code. But, for performance reasons, it's standard practice (and
 indeed the default behaviour of ``django.test.TestCase``) to
@@ -203,8 +199,11 @@ from django.conf import settings
 
 
 def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int) -> None:
-    if not settings.DISABLE_DURABILITY_CHECKING and transaction.get_connection().in_atomic_block:
-      raise RuntimeError("Function should not be called within an atomic block.")
+    if (
+        not getattr(settings, "DISABLE_DURABILITY_CHECKING", False)
+        and transaction.get_connection().in_atomic_block
+    ):
+        raise RuntimeError("Function should not be called within an atomic block.")
 
     with transaction.atomic():
         # As before.
@@ -227,8 +226,6 @@ def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: 
 {% endhighlight %}
 
 You can see the code for `@durable` in [this Gist](https://gist.github.com/seddonym/170c62d0a694f0ccb794c9ad5569ee20).
-If you decide to use it, bear in mind that it's only been tested on PostgreSQL, uses an undocumented API that may
-change, and may need to be adapted if you use multiple databases.
 
 ## When to use durable
 
@@ -253,3 +250,15 @@ application. This is of particular concern with code that has external side effe
 
 Fortunately, durability guarantees are fairly easily achieved with a little custom code. I've found using this in
 well-chosen places makes it easier to design robust Django applications.
+
+# Updates since publication
+
+Based on helpful feedback, I've made a couple of edits since original publication:
+
+- Added warnings about robustness of the transfer code (thanks [MountainReason](https://www.reddit.com/r/django/comments/jxojik/the_trouble_with_transactionatomic/gd02f9r?utm_source=share&utm_medium=web2x&context=3)).
+- Updated the implementation to use `transaction.get_autocommit()` instead of
+  `transaction.get_connection().is_in_atomic_block`
+  (thanks to `transaction.atomic`'s author, [@aymericaugustin](https://twitter.com/aymericaugustin/status/1330089305860169731)).  
+
+Also, there is now a [feature ticket](https://code.djangoproject.com/ticket/32220#ticket) for this to be addressed in Django
+(thanks to core developer [@AdamChainz](https://twitter.com/AdamChainz/status/1330436326236303367)).
