@@ -1,9 +1,6 @@
 {% if site.disqus.shortname %}
-  <div id="disqus_thread" class="mb-5">
-    <button class="btn btn-secondary" onClick="loadDisqusComments()">
-      {% include utils/icon.html icon_class='fas fa-comment' %} Load Comments
-    </button>
-  </div>
+  <div id="disqus_thread" class="mb-5"></div>
+
   <script>
 
   /**
@@ -23,6 +20,7 @@
     s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
   }
+  loadDisqusComments();
   </script>
   <noscript>
     Please enable JavaScript to view the
