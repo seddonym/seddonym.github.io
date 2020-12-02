@@ -227,6 +227,16 @@ def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: 
 
 You can see the code for `@durable` in [this Gist](https://gist.github.com/seddonym/170c62d0a694f0ccb794c9ad5569ee20).
 
+### Stop press! Durability in Django core!
+
+Following the original publication of this article, developer [Ian Foote](https://github.com/Ian-Foote) sprang into
+action and created a pull request into Django. Within days it was merged. ``transaction.atomic`` now has (at least in
+the dev version)
+[a ``durable`` flag](https://docs.djangoproject.com/en/dev/topics/db/transactions/#django.db.transaction.atomic). This
+should be available in Django 3.2. Thanks to all concerned!
+
+While the API is slightly different, the principles covered in this article still apply.
+
 ## When to use durable
 
 Unlike with `transaction.atomic`, `durable` functions cannot be nested. This means you need to be more sparing of when you use
@@ -241,24 +251,26 @@ outage afterwards, could prevent the transfer being committed despite a payment 
 problems, we'll need to make sure the transfer can be retried idempotently - but that's a subject for a future
 blog post.
 
-So although `@durable` doesn't solve all these problems on its own, it does make it easier to think about code like
-this, as it clarifies the context that code is running in.
+So although ensuring durability doesn't solve all these problems on its own, it does make it easier to think about code
+like this, as it clarifies the context that code is running in.
 
 In summary, we must be careful, when using `transaction.atomic`, not to mistake its atomicity guarantee for a guarantee
 of durability. Doing so can lead to data being lost due to an exception raised in a completely different part of the
 application. This is of particular concern with code that has external side effects.
 
-Fortunately, durability guarantees are fairly easily achieved with a little custom code. I've found using this in
-well-chosen places makes it easier to design robust Django applications.
+Fortunately, durability guarantees are fairly easily achieved with a little custom code - or, from Django 3.2 onwards,
+by the use of the ``durable=True``. I've found using this in well-chosen places makes it easier to design robust
+Django applications.
 
 # Updates since publication
 
-Based on helpful feedback, I've made a couple of edits since original publication:
+- Here's [the documentation](https://docs.djangoproject.com/en/dev/topics/db/transactions/#django.db.transaction.atomic)
+  for transaction.atomic's new ``durable`` flag. (Thanks especially to [Ian Foote](https://github.com/Ian-Foote) and
+  [@AdamChainz](https://twitter.com/AdamChainz/status/1330436326236303367) for making this happen). 
+
+I've also made a couple of edits since original publication:
 
 - Added warnings about robustness of the transfer code (thanks [MountainReason](https://www.reddit.com/r/django/comments/jxojik/the_trouble_with_transactionatomic/gd02f9r?utm_source=share&utm_medium=web2x&context=3)).
 - Updated the implementation to use `transaction.get_autocommit()` instead of
   `transaction.get_connection().is_in_atomic_block`
-  (thanks to `transaction.atomic`'s author, [@aymericaugustin](https://twitter.com/aymericaugustin/status/1330089305860169731)).  
-
-Also, there is now a [feature ticket](https://code.djangoproject.com/ticket/32220#ticket) for this to be addressed in Django
-(thanks to core developer [@AdamChainz](https://twitter.com/AdamChainz/status/1330436326236303367)).
+  (thanks to `transaction.atomic`'s author, [@aymericaugustin](https://twitter.com/aymericaugustin/status/1330089305860169731)).
