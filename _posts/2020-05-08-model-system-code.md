@@ -1,10 +1,10 @@
 ---
 layout: post
 title: >
-    Model, System, Code: a three step process for designing software
+    Model, Behaviour, Code: a three step process for designing software
 description: >
     Design is crucial to good software development, but many people lack a process for doing it. In this blog entry, I explain the three step process I use.
-image: model-system-code.png
+image: model-behaviour-code.png
 featured: true
 weight: 2
 tags: [design, architecture]
@@ -44,23 +44,23 @@ Once we've gone to the trouble of writing a lot of working code, it's very diffi
 
 The biggest downside of Code Driven Design is that we're trying to think about too many things at once.
 
-If we design by coding, we're likely to end up thinking about multiple things at the same time: not only how the code is factored, but also what the system is doing and, even deeper, the fundamental concepts and assumptions at the heart of the software. By designing all of these things simultaneously, we run the risk of not giving each aspect the attention it deserves. All too often, software design becomes only code design: the other important questions are answered unthinkingly and without genuinely weighing up the options.
+If we design by coding, we're likely to end up thinking about multiple things at the same time: not only how the code is factored, but also how the system is behaving and, even deeper, the fundamental concepts and assumptions at the heart of the software. By designing all of these things simultaneously, we run the risk of not giving each aspect the attention it deserves. All too often, software design becomes only code design: the other important questions are answered unthinkingly and without genuinely weighing up the options.
 
 It's easier to tackle these questions one at a time.
 
-## Model, System, Code
+## Model, Behaviour, Code
 
-Here, then, is an alternative to Code Driven Design that I find helpful. It's a three step process that I call _Model, System, Code_.
+Here, then, is an alternative to Code Driven Design that I find helpful. It's a three step process that I call _Model, Behaviour, Code_.
 
 At its heart is the idea that the design of a piece of software can be thought of as a stack of three distinct concerns, each founded on the concern below it.
 
-At the bottom of the stack is the Model, next is the System, and at the top is the Code.
+At the bottom of the stack is the Model, next is Behaviour, and at the top is the Code.
 
-{% include content_illustration.html image="model-system-code/stack.png" alt="Stack showing model, system and then code running from bottom to top" %}
+{% include content_illustration.html image="model-system-code/stack.png" alt="Stack showing model, behaviour and then code running from bottom to top" %}
 
 When I tackle a new piece of functionality, I start by designing the bottom of the stack, and work my way upwards. I don't worry about things that belong higher up the stack until I've designed solid foundations for them to rest on. I seek feedback on each item in the stack before moving on to the next one.
 
-So, my process begins by developing the model on which everything sits. Once this is in place, I move on to thinking about the system. Only once I understand both the model and the system do I begin thinking about the code.
+So, my process begins by developing the model on which everything sits. Once this is in place, I move on to thinking about how the system behaves. Only once I understand both the system's model and its behaviour do I begin thinking about the code.
 
 ### Step One: Model Design
 
@@ -76,15 +76,15 @@ What form should a model take? Models are pure concepts, so it doesn't need to b
 
 Having said that, it's a great idea to work with others on designing the model, so you'll probably need some way of externalising it. A common way to do this is using UML class diagrams, but if you do this, avoid addressing language-specific implementation details in this step. Make any diagrams as non-technical as you can: ideally you should be able to develop a model with someone who isn't a developer but who has good understanding of the problem you're trying to solve.  
 
-Modelling is a large subject which I can't do justice to here, but a good place to go to gain further insight is _Domain Driven Design_, a software development approach centered around modelling. Begin by watching [this video from Eric Evans](https://www.youtube.com/watch?v=dnUFEg68ESM&t=2703s), who first coined the term.
+Modelling is a large subject which I can't do justice to here, but a good place to go to gain further insight is _Domain Driven Design_, a software development approach centered around modelling. Begin by watching [this video from Eric Evans](https://www.youtube.com/watch?v=dnUFEg68ESM&t=2703s).
 
 Anyway, once we have a precise, coherent language to talk about the solution, possibly scribbled on the back of an envelope, we're ready to move on to the next step.
 
-### Step Two: System Design
+### Step Two: Behavioural design
 
-System design is all about what, at a high level, the software _actually does_: the real world concerns of processes, networks, databases and the like. This is often referred to as 'software architecture', but because that term is also used to describe things like code organization, I've avoided it. (Admittedly, 'system' is only a little bit better.)  
+Behavioural design is all about what, at a high level, the software _actually does_: the real world concerns of processes, networks, databases and the like. This is often referred to as 'software architecture', but because that term is also used to describe things like code organization, I've avoided it.
 
-Let's take an example of system-level concerns from the world of web development: we are building a page which allows an admin to bulk create some users who can log into our website.
+Let's take an example of behavioural concerns from the world of web development: we are building a page which allows an admin to bulk create some users who can log into our website.
 
 It's easy to jump straight into building this, but there are actually several different decisions we need to make:
 
@@ -93,26 +93,28 @@ It's easy to jump straight into building this, but there are actually several di
 3. How should we handle invalid data? For example, should we fail the whole import, or just report on ones that were invalid?
 4. How should we handle unexpected errors? Should the entire import roll back, or should it commit as much as it can?
 
-These are the kinds of questions we should be considering when designing the system. They are nothing to do with how to organise the code, nor do they involve modelling: they're practical concerns about how to deliver the solution. Usually in order to decide, we need to make trade offs: different options have different pros and cons.
+These are the kinds of questions we should be considering when designing the behaviour. They are nothing to do with how to organise the code, nor do they involve modelling: they're practical concerns about how to deliver the solution. Usually in order to decide, we need to make trade offs: different options have different pros and cons.
 
-Sometimes, once we begin to think about the system we will build, we'll realise it doesn't fit well with the model. If that's the case, it may be worth revisiting the model so that it better supports the needs of the system.
+Sometimes, once we begin to think about this behaviour, we'll realise it doesn't fit well with the model. If that's the case, it may be worth revisiting the model so that it better supports the system's behavioural needs.
 
-System design is another huge subject, but just taking a moment to consciously consider how the system should behave (and review it with others) can save a lot of time down the line.   
+Behavioural design is another huge subject. But whatever our technical expertise, just taking a moment to consciously consider how the system should behave (and review it with others) can save a lot of time down the line.
+
+If you do want to improve your thinking in this area, I can highly recommend [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/) by Martin Kleppman: it's a rich and detailed catalogue of the technical decisions open to us, in particular relating to distributed systems and databases.
 
 ### Step Three: Code Design
 
 Once we have a good understanding of how the system will behave, and its underlying model, we're in the position to start deciding how the code will be organized.
 
-This is the realm of practices like following design patterns, refactoring, clean coding and test driven development. Factoring code is a craft about which many books have been written - but it is made much easier if the fundamental modelling and system questions have already been settled. In particular, our model gives us a language to talk about what we're doing, which helps enormously with things like naming variables.
+This is the realm of practices like design patterns, refactoring, clean coding and test driven development. Factoring code is a craft about which many books have been written - but it is made much easier if the fundamental modelling and behavioural questions have already been settled. In particular, our model gives us a language to talk about what we're doing, which helps enormously with things like naming variables.
 
 ### The importance of iteration
 
 While designing in one layer of the stack, we'll often realise a problem with the design of a layer below. That's of course simply a matter of consciously going back and adjusting the design to reflect what we've learned.
 
-I should also say that this process works best when the development is _agile_ - that is, work commences on small, incremental deliverables (rather than 'big bang' releases). When initially given a feature, it's helpful to break it down into smaller iterations. The model, system and code can be redesigned each time.
+I should also say that this process works best when the development is _agile_ - that is, work commences on small, incremental deliverables (rather than 'big bang' releases). When initially given a feature, it's helpful to break it down into smaller iterations. The model, behaviour and code can be redesigned each time.
 
 ## In summary
 
-I've found designing software in these three discrete steps enormously helpful. If you're someone who habitually practices Code Driven Design, try _Model, System, Code_ instead. You will get most benefit from it if you involve others (at least at review stage) in each step - not just all at the end.
+I've found designing software in these three discrete steps enormously helpful. If you're someone who habitually practices Code Driven Design, try _Model, Behaviour, Code_ instead. You will get most benefit from it if you involve others (at least at review stage) in each step - not just all at the end.
 
 If you've found this useful, or indeed use a different design process, then leave a comment. Good luck!
