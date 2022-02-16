@@ -5,8 +5,6 @@ description: >
     Inversion of Control is a principle for improving the modularity of software. It's a powerful strategy
     for simplifying systems that might otherwise become tangled and difficult to understand.
 image: upside-down.jpg
-featured: true
-weight: 3
 tags: [architecture, factoring, inversion-of-control]
 redirect_from: "/2019/04/15/why-dependency-inversion/"
 ---
