@@ -116,7 +116,7 @@ def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: 
         # Log the external transfer, generating a unique reference.
         external_transfer = ExternalTransfer.objects.create(
             account=account,
-            amount=amount, 
+            amount=amount,
             bank_details=bank_details,
         )
         # Instruct third party API to move money.
@@ -200,8 +200,8 @@ from django.conf import settings
 
 def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: int) -> None:
     if (
-        not getattr(settings, "DISABLE_DURABILITY_CHECKING", False)
-        and transaction.get_connection().in_atomic_block
+        not transaction.get_autocommit()
+        and not getattr(settings, "DISABLE_DURABILITY_CHECKING", False)
     ):
         raise RuntimeError("Function should not be called within an atomic block.")
 
@@ -212,10 +212,10 @@ def transfer_to_other_bank(account: Account, bank_details: BankDetails, amount: 
 It's a simple matter to set `DISABLE_DURABILITY_CHECKING` to `True` in our test configuration, or control it on
 individual tests using
 [`override_settings`](https://docs.djangoproject.com/en/3.1/topics/testing/tools/#django.test.override_settings).
- 
-### The @durable decorator 
 
-We use this approach extensively at [my workplace ](https://octopus.energy/), and have created a decorator named
+### The @durable decorator
+
+We use this approach extensively at [my workplace](https://octopus.energy/), and have created a decorator named
 `durable` to cut down on the boilerplate:
 
 {% highlight python %}
@@ -230,10 +230,9 @@ You can see the code for `@durable` in [this Gist](https://gist.github.com/seddo
 ### Stop press! Durability in Django core!
 
 Following the original publication of this article, developer [Ian Foote](https://github.com/Ian-Foote) sprang into
-action and created a pull request into Django. Within days it was merged. ``transaction.atomic`` now has (at least in
-the dev version)
-[a ``durable`` flag](https://docs.djangoproject.com/en/dev/topics/db/transactions/#django.db.transaction.atomic). This
-should be available in Django 3.2. Thanks to all concerned!
+action and created a pull request into Django. Within days it was merged. ``transaction.atomic`` now has
+[a ``durable`` flag](https://docs.djangoproject.com/en/dev/topics/db/transactions/#django.db.transaction.atomic).
+Thanks to all concerned!
 
 While the API is slightly different, the principles covered in this article still apply.
 
@@ -266,7 +265,7 @@ Django applications.
 
 - Here's [the documentation](https://docs.djangoproject.com/en/dev/topics/db/transactions/#django.db.transaction.atomic)
   for transaction.atomic's new ``durable`` flag. (Thanks especially to [Ian Foote](https://github.com/Ian-Foote) and
-  [@AdamChainz](https://twitter.com/AdamChainz/status/1330436326236303367) for making this happen). 
+  [@AdamChainz](https://twitter.com/AdamChainz/status/1330436326236303367) for making this happen).
 
 I've also made a couple of edits since original publication:
 
