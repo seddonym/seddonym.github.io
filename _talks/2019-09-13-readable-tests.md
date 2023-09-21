@@ -1,7 +1,7 @@
 ---
 layout: talk
 title: How to write readable tests
-featured: true
+featured: false
 weight: 5
 location: PyCon UK
 tags: [tests, readability]

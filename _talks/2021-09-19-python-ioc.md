@@ -2,7 +2,7 @@
 layout: talk
 title: Python and the Inversion of Control
 featured: true
-weight: 3
+weight: 4
 location: PyCon India
 tags: [python, architecture]
 image: ioc-pycon-india.png
