@@ -1,7 +1,7 @@
 ---
 layout: talk
 title: Python and the Inversion of Control
-featured: true
+featured: false
 weight: 4
 location: PyCon India
 tags: [python, architecture]
