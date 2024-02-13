@@ -7,9 +7,10 @@ tags: [django, architecture]
 image: rocky-river.jpg
 featured: false
 weight: 1
-skills_matter_link: https://skillsmatter.com/skillscasts/10414-the-rocky-river-how-to-architect-your-django-monolith
 slides_link: http://slides.com/davidseddon/rocky-river
 ---
-As a Django project grows in size and complexity, it can be difficult to prevent it turning into an architectural 'Big Ball of Mud'.
+As a Django project grows in size and complexity, it can be difficult to prevent it turning into an architectural
+'Big Ball of Mud'. The 'Rocky River' pattern helps you avoid this.
 
-In this talk you will learn about the 'Rocky River' pattern, which helps you avoid this.
+This talk was filmed at the London Django Meetup, but unfortunately the video is no longer available. But you can read
+about the pattern [in my blog post instead]({% link _posts/2018-09-16-rocky-river-pattern.md %}).
