@@ -5,6 +5,6 @@ location: London Django Meetup
 tags: [django]
 image: class-based-views.jpg
 description: An overview of the key features of Django's powerful class based views, and why you should use them.
-skills_matter_link: https://skillsmatter.com/skillscasts/7351-getting-the-most-out-of-class-based-views
+youtube_embed_url: https://www.youtube.com/embed/4M9AE7Q3vYc?si=AK-JRFeeaFQEME4F
 slides_link: http://slides.com/davidseddon/a-touch-of-class/
 ---

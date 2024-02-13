@@ -7,6 +7,6 @@ featured: false
 weight: 2
 image: its-about-time.jpg
 description: Timezones can be confusing and annoying if you need to support them in a project. This talk runs through the tools Django provides for working with them.
-skills_matter_link: https://skillsmatter.com/skillscasts/8005-london-django-april-meetup
+youtube_embed_url: https://www.youtube.com/embed/H5t9jZC8y4g?si=eSc5S225AX9ptcUM
 slides_link: http://slides.com/davidseddon/about-time/
 ---
