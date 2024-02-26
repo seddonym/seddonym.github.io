@@ -153,3 +153,4 @@ If you have any feedback, or questions about using Import Linter, I'd love to he
 - The Layers pattern in Chapter 2 of <em>Pattern-Oriented Software Architecuture Vol. 1</em> (Buschmann, Meunier, Rohnert, Sommerlad and Stal, 1996).
 - [My talk on layers and the Rocky River pattern]({% link _talks/2017-12-12-rocky-river.md %}).
 - [Encapsulated Django]({% link _talks/2015-11-16-encapsulated-django.md %}).
+- [6 ways to improve the architecture of your Python project (using import-linter)](https://www.piglei.com/articles/en-6-ways-to-improve-the-arch-of-you-py-project/) - blog post by Piglei.
