@@ -1,7 +1,7 @@
 ---
 layout: talk
 title: "Domain Driven Design and Python"
-featured: true
+featured: false
 weight: 2
 location: PyCon UK 2023, Cardiff
 tags: [python, "domain driven design", modelling]
