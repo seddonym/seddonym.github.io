@@ -16,7 +16,7 @@ links:
     icon_class: "fab fa-github"
 
   - name: Stack Overflow
-    url: https://stackoverflow.com/story/seddonym
+    url: https://stackoverflow.com/users/1005499/seddonym
     icon_class: "fab fa-stack-overflow"
 
   - name: Twitter
