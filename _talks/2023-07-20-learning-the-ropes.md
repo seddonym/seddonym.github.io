@@ -1,7 +1,7 @@
 ---
 layout: talk
 title: "Learning the Ropes: Understanding Python Generics"
-featured: true
+featured: false
 weight: 3
 location: Europython 2023, Prague
 tags: [python, typing, mypy, variance]
