@@ -2,7 +2,7 @@
 layout: talk
 title: Crabs in Snakes! Writing compiled Python modules in Rust
 featured: true
-weight: 2
+weight: 3
 location: PyCon Italia 2024, Florence
 tags: [python, "domain driven design", modelling]
 image: crabsinsnakes.jpg
