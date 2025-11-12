@@ -4,8 +4,6 @@ title: The trouble with transaction.atomic
 description: "Django's transaction.atomic context manager is an important tool for maintaining data integrity.
   But its guarantees are frequently misunderstood."
 image: trouble-atomic.jpg
-featured: true
-weight: 1
 tags: [django]
 ---
 
