@@ -169,7 +169,7 @@ causes the contract to fail? Maybe you _do_ need a cycle after all...?
 
 No, you don't. There's _always, always_ a way to reorganize code so a cycle is avoided. Different
 approaches are appropriate at different times, but for more guidance take a look
-at [Three Techniques for Inverting Control, in Python](http://127.0.0.1:4000/2019/08/03/ioc-techniques/).
+at [Three Techniques for Inverting Control, in Python](/2019/08/03/ioc-techniques/).
 
 # In summary
 
